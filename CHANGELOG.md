@@ -5,6 +5,15 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.1.3] - 2024-05-04
+
+### Adicionado
+- Script de build para gerar executáveis (build.py)
+- Suporte para gerar executáveis para Windows e macOS
+- README com instruções de uso e build
+- Arquivo de licença MIT
+- Documentação para personalização do ícone do executável
+
 ## [0.1.2] - 2024-05-04
 
 ### Adicionado
