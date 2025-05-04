@@ -6,6 +6,7 @@ from PySide6.QtCore import Qt
 from .about_dialog import AboutDialog
 from PIL import Image
 import numpy as np
+import os
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -23,6 +24,10 @@ class MainWindow(QMainWindow):
         self.image_label.setAlignment(Qt.AlignCenter)
         self.layout.addWidget(self.image_label)
         
+        # Armazenar o caminho da imagem atual
+        self.current_image_path = None
+        self.current_image = None
+        
         # Criar a barra de menus
         self.create_menu_bar()
         
@@ -34,8 +39,21 @@ class MainWindow(QMainWindow):
         
         # Ação Abrir
         open_action = QAction("Abrir", self)
+        open_action.setShortcut("Ctrl+O")
         open_action.triggered.connect(self.open_file)
         file_menu.addAction(open_action)
+        
+        # Ação Salvar
+        save_action = QAction("Salvar", self)
+        save_action.setShortcut("Ctrl+S")
+        save_action.triggered.connect(self.save_file)
+        file_menu.addAction(save_action)
+        
+        # Ação Salvar Como
+        save_as_action = QAction("Salvar Como", self)
+        save_as_action.setShortcut("Ctrl+Shift+S")
+        save_as_action.triggered.connect(self.save_file_as)
+        file_menu.addAction(save_as_action)
         
         # Separador
         file_menu.addSeparator()
@@ -104,18 +122,27 @@ class MainWindow(QMainWindow):
                 # Abrir a imagem usando Pillow
                 image = Image.open(file_name)
                 
+                # Guardar a imagem original e o caminho
+                self.current_image = image
+                self.current_image_path = file_name
+                
+                # Atualizar o título da janela
+                self.setWindowTitle(f"Henpixy - {os.path.basename(file_name)}")
+                
                 # Tratar diferentes modos de imagem
                 if image.mode in ('RGBA', 'LA'):
                     # Converter para RGB mantendo o canal alpha
                     background = Image.new('RGB', image.size, (255, 255, 255))
                     background.paste(image, mask=image.split()[-1])
-                    image = background
+                    display_image = background
                 elif image.mode not in ('RGB', 'L'):
                     # Converter para RGB se não for RGB ou escala de cinza
-                    image = image.convert('RGB')
+                    display_image = image.convert('RGB')
+                else:
+                    display_image = image
                 
                 # Converter para array numpy
-                image_array = np.array(image)
+                image_array = np.array(display_image)
                 
                 # Determinar o formato QImage baseado no modo da imagem
                 if len(image_array.shape) == 2:  # Imagem em escala de cinza
@@ -144,6 +171,117 @@ class MainWindow(QMainWindow):
                     self,
                     "Erro",
                     f"Não foi possível abrir a imagem.\nErro: {str(e)}"
+                )
+    
+    def save_file(self):
+        """Salva a imagem atual no mesmo local onde foi aberta"""
+        if self.current_image is None:
+            QMessageBox.warning(
+                self,
+                "Aviso",
+                "Não há imagem para salvar."
+            )
+            return
+        
+        # Se já temos um caminho, salvar diretamente
+        if self.current_image_path:
+            try:
+                self.current_image.save(self.current_image_path)
+                QMessageBox.information(
+                    self,
+                    "Sucesso",
+                    f"Imagem salva em:\n{self.current_image_path}"
+                )
+            except Exception as e:
+                QMessageBox.critical(
+                    self,
+                    "Erro",
+                    f"Não foi possível salvar a imagem.\nErro: {str(e)}"
+                )
+        else:
+            # Se não temos um caminho, usar "Salvar Como"
+            self.save_file_as()
+    
+    def save_file_as(self):
+        """Salva a imagem atual em um novo local"""
+        if self.current_image is None:
+            QMessageBox.warning(
+                self,
+                "Aviso",
+                "Não há imagem para salvar."
+            )
+            return
+        
+        # Filtros para diferentes tipos de imagem
+        save_filters = (
+            "PNG (*.png);;"
+            "JPEG (*.jpg);;"
+            "BMP (*.bmp);;"
+            "GIF (*.gif);;"
+            "TIFF (*.tiff);;"
+            "WebP (*.webp)"
+        )
+        
+        # Determinar filtro padrão baseado na extensão do arquivo atual
+        default_filter = "PNG (*.png)"
+        if self.current_image_path:
+            ext = os.path.splitext(self.current_image_path)[1].lower()
+            if ext == ".jpg" or ext == ".jpeg":
+                default_filter = "JPEG (*.jpg)"
+            elif ext == ".bmp":
+                default_filter = "BMP (*.bmp)"
+            elif ext == ".gif":
+                default_filter = "GIF (*.gif)"
+            elif ext == ".tiff" or ext == ".tif":
+                default_filter = "TIFF (*.tiff)"
+            elif ext == ".webp":
+                default_filter = "WebP (*.webp)"
+        
+        # Abrir diálogo para salvar
+        file_path, selected_filter = QFileDialog.getSaveFileName(
+            self,
+            "Salvar Imagem",
+            "",
+            save_filters,
+            default_filter
+        )
+        
+        if file_path:
+            try:
+                # Adicionar extensão se não houver
+                if not os.path.splitext(file_path)[1]:
+                    if selected_filter == "PNG (*.png)":
+                        file_path += ".png"
+                    elif selected_filter == "JPEG (*.jpg)":
+                        file_path += ".jpg"
+                    elif selected_filter == "BMP (*.bmp)":
+                        file_path += ".bmp"
+                    elif selected_filter == "GIF (*.gif)":
+                        file_path += ".gif"
+                    elif selected_filter == "TIFF (*.tiff)":
+                        file_path += ".tiff"
+                    elif selected_filter == "WebP (*.webp)":
+                        file_path += ".webp"
+                
+                # Salvar a imagem
+                self.current_image.save(file_path)
+                
+                # Atualizar o caminho atual
+                self.current_image_path = file_path
+                
+                # Atualizar o título da janela
+                self.setWindowTitle(f"Henpixy - {os.path.basename(file_path)}")
+                
+                QMessageBox.information(
+                    self,
+                    "Sucesso",
+                    f"Imagem salva em:\n{file_path}"
+                )
+            except Exception as e:
+                QMessageBox.critical(
+                    self,
+                    "Erro",
+                    f"Não foi possível salvar a imagem.\nErro: {str(e)}"
                 )
     
     def resizeEvent(self, event):

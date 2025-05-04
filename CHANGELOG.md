@@ -5,6 +5,17 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.1.2] - 2024-05-04
+
+### Adicionado
+- Submenu "Salvar" no menu Arquivo, com atalho Ctrl+S
+- Submenu "Salvar Como" no menu Arquivo, com atalho Ctrl+Shift+S
+- Funcionalidade para salvar imagens nos formatos PNG, JPEG, BMP, GIF, TIFF e WebP
+- Detecção automática do formato do arquivo ao salvar
+- Suporte para adicionar a extensão correta ao nome do arquivo
+- Feedback visual após o salvamento (mensagem de sucesso ou erro)
+- Título da janela agora mostra o nome do arquivo atual
+
 ## [0.1.1] - 2024-05-04
 
 ### Adicionado
