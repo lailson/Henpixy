@@ -5,6 +5,15 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.1.4] - 2024-05-04
+
+### Alterado
+- Atualizado o diálogo "Sobre" com informações do desenvolvedor
+- Adicionadas informações acadêmicas (UFPI) no diálogo "Sobre" 
+- Adicionadas informações do professor orientador
+- Atualizado link para o repositório do projeto
+- Melhorado o layout do diálogo "Sobre" para melhor legibilidade
+
 ## [0.1.3] - 2024-05-04
 
 ### Adicionado
