@@ -8,6 +8,9 @@ from PIL import Image
 import numpy as np
 import os
 
+# Importar nossas ferramentas
+from henpixy.tools.intensity import zero_intensity
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -67,6 +70,17 @@ class MainWindow(QMainWindow):
         # Menu Ferramentas
         tools_menu = menubar.addMenu("Ferramentas")
         
+        # Submenu Intensidade
+        intensity_menu = QMenu("Intensidade", self)
+        
+        # Ação Intensidade Zero
+        zero_intensity_action = QAction("Intensidade Zero", self)
+        zero_intensity_action.triggered.connect(self.apply_zero_intensity)
+        intensity_menu.addAction(zero_intensity_action)
+        
+        # Adicionar submenu ao menu Ferramentas
+        tools_menu.addMenu(intensity_menu)
+        
         # Menu Janela
         window_menu = menubar.addMenu("Janela")
         
@@ -92,6 +106,81 @@ class MainWindow(QMainWindow):
             event.accept()
         else:
             event.ignore()
+    
+    def apply_zero_intensity(self):
+        """Aplica a ferramenta de intensidade zero na imagem atual"""
+        if self.current_image is None:
+            QMessageBox.warning(
+                self,
+                "Aviso",
+                "Não há imagem para processar."
+            )
+            return
+        
+        try:
+            # Aplica a ferramenta de intensidade zero
+            processed_image = zero_intensity(self.current_image)
+            
+            # Atualiza a imagem atual
+            self.current_image = processed_image
+            
+            # Exibe a imagem processada
+            self.update_display_image()
+            
+            QMessageBox.information(
+                self,
+                "Sucesso",
+                "A intensidade da imagem foi alterada para zero."
+            )
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                "Erro",
+                f"Não foi possível processar a imagem.\nErro: {str(e)}"
+            )
+    
+    def update_display_image(self):
+        """Atualiza a exibição da imagem atual"""
+        if self.current_image is None:
+            return
+        
+        # Preparar a imagem para exibição
+        display_image = self.current_image
+        
+        # Tratar diferentes modos de imagem
+        if display_image.mode in ('RGBA', 'LA'):
+            # Converter para RGB mantendo o canal alpha
+            background = Image.new('RGB', display_image.size, (255, 255, 255))
+            background.paste(display_image, mask=display_image.split()[-1])
+            display_image = background
+        elif display_image.mode not in ('RGB', 'L'):
+            # Converter para RGB se não for RGB ou escala de cinza
+            display_image = display_image.convert('RGB')
+        
+        # Converter para array numpy
+        image_array = np.array(display_image)
+        
+        # Determinar o formato QImage baseado no modo da imagem
+        if len(image_array.shape) == 2:  # Imagem em escala de cinza
+            height, width = image_array.shape
+            bytes_per_line = width
+            q_image = QImage(image_array.data, width, height, bytes_per_line, QImage.Format_Grayscale8)
+        else:  # Imagem RGB
+            height, width, channel = image_array.shape
+            bytes_per_line = 3 * width
+            q_image = QImage(image_array.data, width, height, bytes_per_line, QImage.Format_RGB888)
+        
+        # Converter para QPixmap e exibir
+        pixmap = QPixmap.fromImage(q_image)
+        
+        # Redimensionar a imagem para caber na janela mantendo a proporção
+        scaled_pixmap = pixmap.scaled(
+            self.image_label.size(),
+            Qt.KeepAspectRatio,
+            Qt.SmoothTransformation
+        )
+        
+        self.image_label.setPixmap(scaled_pixmap)
     
     def open_file(self):
         # Filtros para diferentes tipos de imagem
@@ -129,42 +218,8 @@ class MainWindow(QMainWindow):
                 # Atualizar o título da janela
                 self.setWindowTitle(f"Henpixy - {os.path.basename(file_name)}")
                 
-                # Tratar diferentes modos de imagem
-                if image.mode in ('RGBA', 'LA'):
-                    # Converter para RGB mantendo o canal alpha
-                    background = Image.new('RGB', image.size, (255, 255, 255))
-                    background.paste(image, mask=image.split()[-1])
-                    display_image = background
-                elif image.mode not in ('RGB', 'L'):
-                    # Converter para RGB se não for RGB ou escala de cinza
-                    display_image = image.convert('RGB')
-                else:
-                    display_image = image
-                
-                # Converter para array numpy
-                image_array = np.array(display_image)
-                
-                # Determinar o formato QImage baseado no modo da imagem
-                if len(image_array.shape) == 2:  # Imagem em escala de cinza
-                    height, width = image_array.shape
-                    bytes_per_line = width
-                    q_image = QImage(image_array.data, width, height, bytes_per_line, QImage.Format_Grayscale8)
-                else:  # Imagem RGB
-                    height, width, channel = image_array.shape
-                    bytes_per_line = 3 * width
-                    q_image = QImage(image_array.data, width, height, bytes_per_line, QImage.Format_RGB888)
-                
-                # Converter para QPixmap e exibir
-                pixmap = QPixmap.fromImage(q_image)
-                
-                # Redimensionar a imagem para caber na janela mantendo a proporção
-                scaled_pixmap = pixmap.scaled(
-                    self.image_label.size(),
-                    Qt.KeepAspectRatio,
-                    Qt.SmoothTransformation
-                )
-                
-                self.image_label.setPixmap(scaled_pixmap)
+                # Exibir a imagem
+                self.update_display_image()
                 
             except Exception as e:
                 QMessageBox.critical(

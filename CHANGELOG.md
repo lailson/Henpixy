@@ -5,6 +5,15 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.1.5] - 2024-05-04
+
+### Adicionado
+- Submenu "Intensidade" no menu Ferramentas
+- Função "Intensidade Zero" para alterar todos os pixels da imagem para zero
+- Nova estrutura modular para ferramentas de processamento de imagem
+- Separação entre GUI e lógica de processamento de imagem
+- Função auxiliar para atualizar a exibição da imagem
+
 ## [0.1.4] - 2024-05-04
 
 ### Alterado
