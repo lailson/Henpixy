@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (QMainWindow, QMenuBar, QMenu, 
                               QFileDialog, QMessageBox, QLabel,
-                              QWidget, QVBoxLayout)
+                              QWidget, QVBoxLayout, QDialog)
 from PySide6.QtGui import QAction, QPixmap, QImage
 from PySide6.QtCore import Qt
 from .about_dialog import AboutDialog
@@ -10,6 +10,9 @@ import os
 
 # Importar nossas ferramentas
 from henpixy.tools.intensity import zero_intensity
+
+# Importar o gerenciador de histórico
+from henpixy.janela.historico import HistoryManager, HistoryDialog
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -30,6 +33,9 @@ class MainWindow(QMainWindow):
         # Armazenar o caminho da imagem atual
         self.current_image_path = None
         self.current_image = None
+        
+        # Inicializa o gerenciador de histórico
+        self.history_manager = HistoryManager()
         
         # Criar a barra de menus
         self.create_menu_bar()
@@ -84,6 +90,12 @@ class MainWindow(QMainWindow):
         # Menu Janela
         window_menu = menubar.addMenu("Janela")
         
+        # Ação Histórico
+        history_action = QAction("Histórico", self)
+        history_action.setShortcut("Ctrl+H")
+        history_action.triggered.connect(self.show_history)
+        window_menu.addAction(history_action)
+        
         # Menu Ajuda
         help_menu = menubar.addMenu("Ajuda")
         
@@ -107,6 +119,22 @@ class MainWindow(QMainWindow):
         else:
             event.ignore()
     
+    def show_history(self):
+        """Exibe o diálogo de histórico"""
+        if not self.history_manager.history_items:
+            QMessageBox.information(
+                self,
+                "Histórico",
+                "Não há histórico disponível."
+            )
+            return
+        
+        dialog = HistoryDialog(self.history_manager, self)
+        if dialog.exec() == QDialog.Accepted:
+            # O usuário restaurou uma imagem do histórico
+            self.current_image = self.history_manager.get_current_image()
+            self.update_display_image()
+    
     def apply_zero_intensity(self):
         """Aplica a ferramenta de intensidade zero na imagem atual"""
         if self.current_image is None:
@@ -121,17 +149,14 @@ class MainWindow(QMainWindow):
             # Aplica a ferramenta de intensidade zero
             processed_image = zero_intensity(self.current_image)
             
+            # Adiciona ao histórico
+            self.history_manager.add_item(processed_image, "Intensidade Zero")
+            
             # Atualiza a imagem atual
             self.current_image = processed_image
             
             # Exibe a imagem processada
             self.update_display_image()
-            
-            QMessageBox.information(
-                self,
-                "Sucesso",
-                "A intensidade da imagem foi alterada para zero."
-            )
         except Exception as e:
             QMessageBox.critical(
                 self,
@@ -214,6 +239,10 @@ class MainWindow(QMainWindow):
                 # Guardar a imagem original e o caminho
                 self.current_image = image
                 self.current_image_path = file_name
+                
+                # Adicionar ao histórico
+                self.history_manager.clear()  # Limpa o histórico anterior
+                self.history_manager.add_item(image, f"Original: {os.path.basename(file_name)}")
                 
                 # Atualizar o título da janela
                 self.setWindowTitle(f"Henpixy - {os.path.basename(file_name)}")
