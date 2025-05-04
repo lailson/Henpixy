@@ -64,10 +64,27 @@ O executável gerado para Windows é o arquivo `Henpixy.exe` na pasta `dist/`.
 #### macOS
 O executável gerado para macOS é o arquivo `Henpixy` na pasta `dist/`.
 
+Para criar um pacote instalador DMG no macOS:
+
+1. Instale o `create-dmg`:
+```bash
+brew install create-dmg
+```
+
+2. Execute o script de criação do DMG:
+```bash
+./create_macos_dmg.sh
+```
+
+3. O arquivo DMG será gerado em `dist/Henpixy-0.1.3.dmg`.
+
 ### Personalização do Ícone
 
 - Para Windows: Adicione um arquivo `icon.ico` na pasta `resources/`
 - Para macOS: Adicione um arquivo `icon.icns` na pasta `resources/`
+
+Para personalizar a aparência do DMG no macOS:
+- Adicione uma imagem de fundo em `resources/dmg_background.png` (800x400 pixels recomendado)
 
 ## Licença
 
