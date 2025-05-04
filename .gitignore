@@ -72,4 +72,17 @@ config.ini
 .coverage
 htmlcov/
 .pytest_cache/
-.tox/ 
+.tox/
+
+# Scripts de criação de executáveis e DMG
+create_macos_dmg.sh
+*.spec
+build/dmg/
+dist/Henpixy*
+dist/*.dmg
+dist/*.exe
+
+# Recursos específicos da plataforma
+resources/icon.icns
+resources/icon.ico
+resources/dmg_background.png 
