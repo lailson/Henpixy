@@ -5,7 +5,15 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
-## [1.0.0] - 2024-05-04
+## [0.1.1] - 2024-05-04
+
+### Adicionado
+- Submenu "Sair" no menu Arquivo
+- Atalho de teclado "Ctrl+Q" para sair do programa
+- Diálogo de confirmação ao fechar o programa
+- Separador visual entre as opções "Abrir" e "Sair" no menu Arquivo
+
+## [0.1.0] - 2024-05-04
 
 ### Adicionado
 - Estrutura inicial do projeto
