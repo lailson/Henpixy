@@ -37,6 +37,15 @@ class MainWindow(QMainWindow):
         open_action.triggered.connect(self.open_file)
         file_menu.addAction(open_action)
         
+        # Separador
+        file_menu.addSeparator()
+        
+        # Ação Sair
+        exit_action = QAction("Sair", self)
+        exit_action.setShortcut("Ctrl+Q")
+        exit_action.triggered.connect(self.close)
+        file_menu.addAction(exit_action)
+        
         # Menu Ferramentas
         tools_menu = menubar.addMenu("Ferramentas")
         
@@ -50,6 +59,21 @@ class MainWindow(QMainWindow):
         about_action = QAction("Sobre", self)
         about_action.triggered.connect(self.show_about)
         help_menu.addAction(about_action)
+    
+    def closeEvent(self, event):
+        """Evento chamado quando a janela é fechada"""
+        reply = QMessageBox.question(
+            self,
+            "Sair",
+            "Deseja realmente sair?",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No
+        )
+        
+        if reply == QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
     
     def open_file(self):
         # Filtros para diferentes tipos de imagem
