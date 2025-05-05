@@ -2,11 +2,36 @@
 
 Um programa para processamento digital de imagens com interface gráfica em Python.
 
+## Checklist de Desenvolvimento
+
+A aplicação deve ter as seguintes funcionalidades:
+
+- ✅ Interface gráfica 
+- ✅ Carregar imagem 
+- ✅ Salvar imagem 
+- ✅ Intensidade zero: função para atribuir intensidade zero a todos os pixels da imagem 
+- ✅ Retornar para a imagem original 
+- ⬜ Transformação de potência: possibilitando ao usuário definir o valor de gama e utilizar o valor de c = 1
+- ⬜ Alargamento de contraste: possibilitando ao usuário definir os valores de (r1, s1) e (r2, s2)
+- ⬜ Fatiamento por Planos de Bits: possibilitando ao usuário selecionar o plano de bits desejado para a visualização
+- ⬜ Equalização de histograma: o programa deve exibir a imagem equalizada, o histograma da imagem original e o histograma da imagem equalizada para fins de comparação
+- ⬜ Fatiamento por Intensidades para Pseudocores
+- ⬜ Filtros de suavização: Média
+- ⬜ Filtros de estatísticas de ordem: Máx, Mín e Mediana
+- ⬜ Filtro Laplaciano: utilizando a máscara com centro negativo e que inclui os termos diagonais, faça o que se peder: 
+  - (a) apresente o resultado do laplaciano sem ajuste
+  - (b) apresente o resultado do laplaciano com ajuste
+  - (c) apresente a imagem original aguçada com a imagem laplaciana
+
 ## Funcionalidades
 
 - Visualização de imagens em diversos formatos (PNG, JPEG, BMP, GIF, TIFF, WebP, etc.)
 - Salvar imagens em diferentes formatos
 - Interface simples e intuitiva com menus e atalhos
+- Zoom para melhor visualização dos detalhes da imagem
+- Visualização de informações detalhadas da imagem (tamanho, tipo, dimensões, espaço de cores)
+- Visualização da intensidade de pixels selecionados
+- Histórico de modificações com possibilidade de retornar a estados anteriores
 
 ## Requisitos para Desenvolvimento
 
@@ -76,7 +101,7 @@ brew install create-dmg
 ./create_macos_dmg.sh
 ```
 
-3. O arquivo DMG será gerado em `dist/Henpixy-0.1.3.dmg`.
+3. O arquivo DMG será gerado em `dist/Henpixy-0.1.11.dmg`.
 
 ### Personalização do Ícone
 
