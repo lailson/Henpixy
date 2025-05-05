@@ -5,6 +5,14 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.1.14] - 2024-05-15
+
+### Adicionado
+- Nova função de transformação "Negativo" no menu Intensidade
+- Implementação da função de negativo usando lookup tables (S = L-1-r)
+- Suporte para processamento de imagens em escala de cinza e coloridas (RGB/RGBA)
+- Preservação do canal alpha em imagens com transparência
+
 ## [0.1.13] - 2024-05-15
 
 ### Alterado

@@ -11,6 +11,7 @@ A aplicação deve ter as seguintes funcionalidades:
 - ✅ Salvar imagem 
 - ✅ Intensidade zero: função para atribuir intensidade zero a todos os pixels da imagem 
 - ✅ Retornar para a imagem original 
+- ✅ Função negativo: implementação da transformação S = L - 1 - r
 - ⬜ Transformação de potência: possibilitando ao usuário definir o valor de gama e utilizar o valor de c = 1
 - ⬜ Alargamento de contraste: possibilitando ao usuário definir os valores de (r1, s1) e (r2, s2)
 - ⬜ Fatiamento por Planos de Bits: possibilitando ao usuário selecionar o plano de bits desejado para a visualização
@@ -101,7 +102,7 @@ brew install create-dmg
 ./create_macos_dmg.sh
 ```
 
-3. O arquivo DMG será gerado em `dist/Henpixy-0.1.13.dmg`.
+3. O arquivo DMG será gerado em `dist/Henpixy-0.1.14.dmg`.
 
 ### Personalização do Ícone
 
