@@ -5,6 +5,28 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.1.16] - 2024-05-15
+
+### Adicionado
+- Nova função "Alargamento de Contraste" no menu Intensidade
+- Implementação da transformação linear por partes definida por pontos (r1, s1) e (r2, s2)
+- Diálogo interativo para configuração dos parâmetros de alargamento de contraste
+- Configurações predefinidas para diferentes efeitos (contraste suave, médio, forte, binarização, inversão)
+- Controles intuitivos para definir os pontos de controle
+- Validação de parâmetros para garantir transformações válidas
+- Descrição explicativa da função e seus efeitos no diálogo
+- Preservação do canal alpha em imagens com transparência
+
+## [0.1.15] - 2024-05-15
+
+### Adicionado
+- Nova função de transformação "Transformação Gama" no menu Intensidade
+- Implementação da transformação de potência (gama) com a fórmula S = c×r^γ
+- Diálogo interativo para ajuste dos parâmetros gamma e c
+- Suporte para processamento de diferentes profundidades de bits (8 e 16 bits)
+- Informações detalhadas sobre o efeito de diferentes valores de gamma na imagem
+- Preservação do canal alpha em imagens com transparência
+
 ## [0.1.14] - 2024-05-15
 
 ### Adicionado

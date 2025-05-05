@@ -1,9 +1,12 @@
 from PySide6.QtWidgets import (QMainWindow, QMenuBar, QMenu, 
                               QFileDialog, QMessageBox, QLabel,
-                              QWidget, QVBoxLayout, QDialog)
+                              QWidget, QVBoxLayout, QDialog,
+                              QInputDialog, QDoubleSpinBox, QHBoxLayout,
+                              QPushButton, QFormLayout)
 from PySide6.QtGui import QAction, QPixmap, QImage, QCursor
 from PySide6.QtCore import Qt, QPoint, QRect
 from .about_dialog import AboutDialog
+from .contrast_stretching_dialog import ContrastStretchingDialog
 from PIL import Image
 import numpy as np
 import os
@@ -11,6 +14,8 @@ import os
 # Importar nossas ferramentas
 from henpixy.tools.intensity import zero_intensity
 from henpixy.tools.negative import negative
+from henpixy.tools.power import power_transform
+from henpixy.tools.contrast_stretching import contrast_stretching
 
 # Importar o gerenciador de histórico
 from henpixy.janela.historico import HistoryManager, HistoryDialog
@@ -20,6 +25,79 @@ from henpixy.janela.intensidade import PixelIntensityDialog
 
 # Importar o diálogo de informações da imagem
 from henpixy.janela.informacoes import ImageInfoDialog
+
+class GammaDialog(QDialog):
+    """Diálogo para ajuste dos parâmetros da transformação gama"""
+    
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        
+        self.setWindowTitle("Transformação Gama")
+        self.setMinimumWidth(300)
+        
+        # Valores iniciais
+        self.gamma_value = 1.0
+        self.c_value = 1.0
+        
+        # Layout principal
+        layout = QVBoxLayout(self)
+        
+        # Form layout para os campos
+        form_layout = QFormLayout()
+        
+        # Campo para o valor de gamma
+        self.gamma_spin = QDoubleSpinBox()
+        self.gamma_spin.setRange(0.1, 10.0)
+        self.gamma_spin.setSingleStep(0.1)
+        self.gamma_spin.setValue(self.gamma_value)
+        self.gamma_spin.setDecimals(2)
+        form_layout.addRow("Valor de Gama (γ):", self.gamma_spin)
+        
+        # Campo para o valor de c (constante)
+        self.c_spin = QDoubleSpinBox()
+        self.c_spin.setRange(0.1, 5.0)
+        self.c_spin.setSingleStep(0.1)
+        self.c_spin.setValue(self.c_value)
+        self.c_spin.setDecimals(2)
+        form_layout.addRow("Constante (c):", self.c_spin)
+        
+        # Adicionando form layout ao layout principal
+        layout.addLayout(form_layout)
+        
+        # Informações sobre a transformação
+        info_text = """
+        <p><b>Transformação Gama: S = c × r^γ</b></p>
+        <p>- S é o valor resultante</p>
+        <p>- c é uma constante multiplicativa</p>
+        <p>- r é o valor original do pixel (normalizado entre 0 e 1)</p>
+        <p>- γ (gama) é o expoente que controla o contraste</p>
+        <p>Características:</p>
+        <p>- γ < 1: Expande valores escuros (mais detalhes em áreas escuras)</p>
+        <p>- γ = 1: Transformação identidade (imagem não é alterada)</p>
+        <p>- γ > 1: Expande valores claros (mais detalhes em áreas claras)</p>
+        """
+        
+        info_label = QLabel(info_text)
+        info_label.setWordWrap(True)
+        layout.addWidget(info_label)
+        
+        # Botões de OK e Cancelar
+        button_layout = QHBoxLayout()
+        ok_button = QPushButton("OK")
+        cancel_button = QPushButton("Cancelar")
+        
+        ok_button.clicked.connect(self.accept)
+        cancel_button.clicked.connect(self.reject)
+        
+        button_layout.addWidget(ok_button)
+        button_layout.addWidget(cancel_button)
+        layout.addLayout(button_layout)
+    
+    def get_values(self):
+        """Retorna os valores dos parâmetros"""
+        self.gamma_value = self.gamma_spin.value()
+        self.c_value = self.c_spin.value()
+        return self.gamma_value, self.c_value
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -150,6 +228,16 @@ class MainWindow(QMainWindow):
         negative_action = QAction("Negativo", self)
         negative_action.triggered.connect(self.apply_negative)
         intensity_menu.addAction(negative_action)
+        
+        # Ação Transformação Gama
+        gamma_action = QAction("Transformação Gama", self)
+        gamma_action.triggered.connect(self.apply_gamma)
+        intensity_menu.addAction(gamma_action)
+        
+        # Ação Alargamento de Contraste
+        contrast_stretching_action = QAction("Alargamento de Contraste", self)
+        contrast_stretching_action.triggered.connect(self.apply_contrast_stretching)
+        intensity_menu.addAction(contrast_stretching_action)
         
         # Adicionar submenu ao menu Ferramentas
         tools_menu.addMenu(intensity_menu)
@@ -783,4 +871,88 @@ class MainWindow(QMainWindow):
                 self,
                 "Erro",
                 f"Não foi possível abrir a imagem.\nErro: {str(e)}"
+            )
+
+    def apply_gamma(self):
+        """Aplica a transformação gama na imagem atual"""
+        if self.current_image is None:
+            QMessageBox.warning(
+                self,
+                "Aviso",
+                "Não há imagem para processar."
+            )
+            return
+        
+        try:
+            # Abre o diálogo de ajuste dos parâmetros da transformação gama
+            dialog = GammaDialog(self)
+            result = dialog.exec()
+            
+            # Verifica se o usuário cancelou a operação
+            if result != QDialog.Accepted:
+                return
+            
+            # Obtém os valores dos parâmetros
+            gamma_value, c_value = dialog.get_values()
+            
+            # Aplica a transformação gama
+            processed_image = power_transform(self.current_image, gamma_value, c_value)
+            
+            # Adiciona ao histórico
+            self.history_manager.add_item(processed_image, f"Transformação Gama (γ={gamma_value}, c={c_value})")
+            
+            # Atualiza a imagem atual
+            self.current_image = processed_image
+            
+            # Exibe a imagem processada
+            self.update_display_image()
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                "Erro",
+                f"Não foi possível processar a imagem.\nErro: {str(e)}"
+            )
+    
+    def apply_contrast_stretching(self):
+        """Aplica o alargamento de contraste na imagem atual"""
+        if self.current_image is None:
+            QMessageBox.warning(
+                self,
+                "Aviso",
+                "Não há imagem para processar."
+            )
+            return
+        
+        try:
+            # Abre o diálogo de ajuste dos parâmetros do alargamento de contraste
+            dialog = ContrastStretchingDialog(self)
+            result = dialog.exec()
+            
+            # Verifica se o usuário cancelou a operação
+            if result != QDialog.Accepted:
+                return
+            
+            # Obtém os valores dos parâmetros
+            params = dialog.get_parameters()
+            r1, s1, r2, s2 = params["r1"], params["s1"], params["r2"], params["s2"]
+            
+            # Aplica o alargamento de contraste
+            processed_image = contrast_stretching(self.current_image, r1, s1, r2, s2)
+            
+            # Adiciona ao histórico
+            self.history_manager.add_item(
+                processed_image, 
+                f"Alargamento de Contraste (r1={r1}, s1={s1}, r2={r2}, s2={s2})"
+            )
+            
+            # Atualiza a imagem atual
+            self.current_image = processed_image
+            
+            # Exibe a imagem processada
+            self.update_display_image()
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                "Erro",
+                f"Não foi possível processar a imagem.\nErro: {str(e)}"
             ) 
