@@ -55,6 +55,11 @@ class MainWindow(QMainWindow):
         # Modo de seleção de pixel
         self.pixel_selection_mode = False
         
+        # Fator de zoom
+        self.zoom_factor = 1.0
+        self.min_zoom = 0.1
+        self.max_zoom = 5.0
+        
         # Criar a barra de menus
         self.create_menu_bar()
         
@@ -99,6 +104,27 @@ class MainWindow(QMainWindow):
         exit_action.setShortcut("Ctrl+Q")
         exit_action.triggered.connect(self.close)
         file_menu.addAction(exit_action)
+        
+        # Menu Exibir
+        view_menu = menubar.addMenu("Exibir")
+        
+        # Ação Mais Zoom
+        zoom_in_action = QAction("Mais Zoom", self)
+        zoom_in_action.setShortcut("Ctrl++")
+        zoom_in_action.triggered.connect(self.zoom_in)
+        view_menu.addAction(zoom_in_action)
+        
+        # Ação Menos Zoom
+        zoom_out_action = QAction("Menos Zoom", self)
+        zoom_out_action.setShortcut("Ctrl+-")
+        zoom_out_action.triggered.connect(self.zoom_out)
+        view_menu.addAction(zoom_out_action)
+        
+        # Ação Reset Zoom
+        reset_zoom_action = QAction("Zoom Original", self)
+        reset_zoom_action.setShortcut("Ctrl+0")
+        reset_zoom_action.triggered.connect(self.reset_zoom)
+        view_menu.addAction(reset_zoom_action)
         
         # Menu Ferramentas
         tools_menu = menubar.addMenu("Ferramentas")
@@ -247,14 +273,73 @@ class MainWindow(QMainWindow):
         # Converter para QPixmap e exibir
         pixmap = QPixmap.fromImage(q_image)
         
-        # Redimensionar a imagem para caber na janela mantendo a proporção
-        scaled_pixmap = pixmap.scaled(
-            self.image_label.size(),
-            Qt.KeepAspectRatio,
-            Qt.SmoothTransformation
-        )
+        # Aplicar zoom
+        if self.zoom_factor != 1.0:
+            # Calcula o novo tamanho baseado no zoom
+            new_width = int(pixmap.width() * self.zoom_factor)
+            new_height = int(pixmap.height() * self.zoom_factor)
+            
+            # Redimensiona o pixmap
+            scaled_pixmap = pixmap.scaled(
+                new_width,
+                new_height,
+                Qt.KeepAspectRatio,
+                Qt.SmoothTransformation
+            )
+        else:
+            # Redimensionar a imagem para caber na janela mantendo a proporção
+            scaled_pixmap = pixmap.scaled(
+                self.image_label.size(),
+                Qt.KeepAspectRatio,
+                Qt.SmoothTransformation
+            )
         
         self.image_label.setPixmap(scaled_pixmap)
+    
+    def zoom_in(self):
+        """Aumenta o zoom da imagem"""
+        if self.current_image is None:
+            return
+        
+        # Aumenta o fator de zoom em 10%
+        self.zoom_factor = min(self.zoom_factor * 1.1, self.max_zoom)
+        self.update_display_image()
+        
+        # Atualiza o título da janela para mostrar o fator de zoom
+        self.update_window_title()
+    
+    def zoom_out(self):
+        """Diminui o zoom da imagem"""
+        if self.current_image is None:
+            return
+        
+        # Diminui o fator de zoom em 10%
+        self.zoom_factor = max(self.zoom_factor / 1.1, self.min_zoom)
+        self.update_display_image()
+        
+        # Atualiza o título da janela para mostrar o fator de zoom
+        self.update_window_title()
+    
+    def reset_zoom(self):
+        """Redefine o zoom para o tamanho original"""
+        if self.current_image is None:
+            return
+        
+        # Redefine o fator de zoom
+        self.zoom_factor = 1.0
+        self.update_display_image()
+        
+        # Atualiza o título da janela para mostrar o fator de zoom
+        self.update_window_title()
+    
+    def update_window_title(self):
+        """Atualiza o título da janela"""
+        if self.current_image_path:
+            filename = os.path.basename(self.current_image_path)
+            zoom_percent = int(self.zoom_factor * 100)
+            self.setWindowTitle(f"Henpixy - {filename} ({zoom_percent}%)")
+        else:
+            self.setWindowTitle("Henpixy")
     
     def open_file(self):
         # Filtros para diferentes tipos de imagem
@@ -293,8 +378,11 @@ class MainWindow(QMainWindow):
                 self.history_manager.clear()  # Limpa o histórico anterior
                 self.history_manager.add_item(image, f"Original: {os.path.basename(file_name)}")
                 
+                # Redefine o zoom ao abrir uma nova imagem
+                self.zoom_factor = 1.0
+                
                 # Atualizar o título da janela
-                self.setWindowTitle(f"Henpixy - {os.path.basename(file_name)}")
+                self.update_window_title()
                 
                 # Exibir a imagem
                 self.update_display_image()
@@ -420,7 +508,8 @@ class MainWindow(QMainWindow):
     def resizeEvent(self, event):
         """Redimensiona a imagem quando a janela é redimensionada"""
         super().resizeEvent(event)
-        if hasattr(self, 'image_label') and self.image_label.pixmap():
+        if hasattr(self, 'image_label') and self.image_label.pixmap() and self.zoom_factor == 1.0:
+            # Só redimensiona automaticamente se o zoom estiver em 100%
             scaled_pixmap = self.image_label.pixmap().scaled(
                 self.image_label.size(),
                 Qt.KeepAspectRatio,
