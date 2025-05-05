@@ -5,6 +5,14 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.1.7] - 2024-05-15
+
+### Alterado
+- Transformado o diálogo de histórico em janela auxiliar não-modal
+- Agora é possível interagir com a janela principal enquanto o histórico está aberto
+- A janela de histórico permanece aberta após restaurar uma imagem
+- Melhorado o fluxo de trabalho para permitir múltiplas restaurações em sequência
+
 ## [0.1.6] - 2024-05-15
 
 ### Alterado
