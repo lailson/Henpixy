@@ -5,6 +5,19 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.1.19] - 2024-05-17
+
+### Adicionado
+- Implementação da equalização de histograma no menu Ferramentas > Intensidade
+- Nova janela de visualização de histograma no menu Janela
+- Funcionalidade para calcular e exibir histogramas de imagens
+- Comparação visual entre imagem original e equalizada
+- Visualização paralela de histogramas original e equalizado
+- Exibição da função de distribuição acumulada (CDF)
+- Estatísticas detalhadas do histograma (dimensões, mínimo, máximo, média, desvio padrão, moda, mediana)
+- Interface responsiva com suporte para redimensionamento e barras de rolagem
+- Informações teóricas sobre histogramas e equalização
+
 ## [0.1.18] - 2024-05-16
 
 ### Alterado

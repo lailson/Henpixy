@@ -15,7 +15,7 @@ A aplicação deve ter as seguintes funcionalidades:
 - ✅ Transformação de potência: possibilitando ao usuário definir o valor de gama e utilizar o valor de c = 1
 - ✅ Alargamento de contraste: possibilitando ao usuário definir os valores de (r1, s1) e (r2, s2)
 - ✅ Fatiamento por Planos de Bits: possibilitando ao usuário selecionar o plano de bits desejado para a visualização
-- ⬜ Equalização de histograma: o programa deve exibir a imagem equalizada, o histograma da imagem original e o histograma da imagem equalizada para fins de comparação
+- ✅ Equalização de histograma: o programa deve exibir a imagem equalizada, o histograma da imagem original e o histograma da imagem equalizada para fins de comparação
 - ⬜ Fatiamento por Intensidades para Pseudocores
 - ⬜ Filtros de suavização: Média
 - ⬜ Filtros de estatísticas de ordem: Máx, Mín e Mediana
@@ -33,6 +33,12 @@ A aplicação deve ter as seguintes funcionalidades:
 - Visualização de informações detalhadas da imagem (tamanho, tipo, dimensões, espaço de cores)
 - Visualização da intensidade de pixels selecionados
 - Histórico de modificações com possibilidade de retornar a estados anteriores
+- Análise e equalização de histogramas:
+  - Visualização de histogramas em tempo real
+  - Comparação entre imagem original e equalizada
+  - Estatísticas detalhadas do histograma (mínimo, máximo, média, desvio padrão)
+  - Visualização da função de distribuição acumulada (CDF)
+  - Janela dedicada para análise de histograma
 
 ## Requisitos para Desenvolvimento
 
