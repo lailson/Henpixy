@@ -224,46 +224,40 @@ class MainWindow(QMainWindow):
         # Menu Ferramentas
         tools_menu = menubar.addMenu("Ferramentas")
         
-        # Submenu Intensidade
-        intensity_menu = QMenu("Intensidade", self)
-        
         # Ação Intensidade Zero
         zero_intensity_action = QAction("Intensidade Zero", self)
         zero_intensity_action.triggered.connect(self.apply_zero_intensity)
-        intensity_menu.addAction(zero_intensity_action)
+        tools_menu.addAction(zero_intensity_action)
         
         # Ação Negativo
         negative_action = QAction("Negativo", self)
         negative_action.triggered.connect(self.apply_negative)
-        intensity_menu.addAction(negative_action)
+        tools_menu.addAction(negative_action)
         
         # Ação Transformação Gama
         gamma_action = QAction("Transformação Gama", self)
         gamma_action.triggered.connect(self.apply_gamma)
-        intensity_menu.addAction(gamma_action)
+        tools_menu.addAction(gamma_action)
         
         # Ação Alargamento de Contraste
         contrast_stretching_action = QAction("Alargamento de Contraste", self)
         contrast_stretching_action.triggered.connect(self.apply_contrast_stretching)
-        intensity_menu.addAction(contrast_stretching_action)
+        tools_menu.addAction(contrast_stretching_action)
         
         # Ação Fatiamento por Planos de Bits
         bit_plane_action = QAction("Fatiamento por Planos de Bits", self)
         bit_plane_action.triggered.connect(self.apply_bit_plane_slicing)
-        intensity_menu.addAction(bit_plane_action)
+        tools_menu.addAction(bit_plane_action)
         
         # Ação Equalização de Histograma
         histogram_action = QAction("Equalização de Histograma", self)
         histogram_action.triggered.connect(self.apply_histogram_equalization)
-        intensity_menu.addAction(histogram_action)
+        tools_menu.addAction(histogram_action)
         
         # Ação Fatiamento por Intensidades para Pseudocores
         pseudocolor_action = QAction("Fatiamento por Intensidades para Pseudocores", self)
         pseudocolor_action.triggered.connect(self.apply_pseudocolor)
-        intensity_menu.addAction(pseudocolor_action)
-        
-        # Adicionar submenu ao menu Ferramentas
-        tools_menu.addMenu(intensity_menu)
+        tools_menu.addAction(pseudocolor_action)
         
         # Menu Janela
         window_menu = menubar.addMenu("Janela")

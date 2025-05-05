@@ -5,10 +5,17 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.1.21] - 2024-05-18
+
+### Alterado
+- Reorganização do menu Ferramentas, removendo o submenu Intensidade
+- Todas as ferramentas de processamento de imagem agora estão diretamente no menu Ferramentas
+- Simplificação da estrutura do menu para melhor usabilidade
+
 ## [0.1.20] - 2024-05-18
 
 ### Adicionado
-- Implementação do fatiamento por intensidades para pseudocores no menu Ferramentas > Intensidade
+- Implementação do fatiamento por intensidades para pseudocores no menu Ferramentas
 - Interface com visualização lado a lado da imagem original e com pseudocores
 - Mapas de cores predefinidos (Arco-íris, Temperatura, Densidade, Topográfico, Binário)
 - Criação personalizada de intervalos de intensidade com seleção de cores
@@ -20,7 +27,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 ## [0.1.19] - 2024-05-17
 
 ### Adicionado
-- Implementação da equalização de histograma no menu Ferramentas > Intensidade
+- Implementação da equalização de histograma no menu Ferramentas
 - Nova janela de visualização de histograma no menu Janela
 - Funcionalidade para calcular e exibir histogramas de imagens
 - Comparação visual entre imagem original e equalizada
@@ -54,7 +61,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 ## [0.1.16] - 2024-05-15
 
 ### Adicionado
-- Nova função "Alargamento de Contraste" no menu Intensidade
+- Nova função "Alargamento de Contraste" no menu Ferramentas
 - Implementação da transformação linear por partes definida por pontos (r1, s1) e (r2, s2)
 - Diálogo interativo para configuração dos parâmetros de alargamento de contraste
 - Configurações predefinidas para diferentes efeitos (contraste suave, médio, forte, binarização, inversão)
@@ -66,7 +73,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 ## [0.1.15] - 2024-05-15
 
 ### Adicionado
-- Nova função de transformação "Transformação Gama" no menu Intensidade
+- Nova função de transformação "Transformação Gama" no menu Ferramentas
 - Implementação da transformação de potência (gama) com a fórmula S = c×r^γ
 - Diálogo interativo para ajuste dos parâmetros gamma e c
 - Suporte para processamento de diferentes profundidades de bits (8 e 16 bits)
@@ -76,7 +83,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 ## [0.1.14] - 2024-05-15
 
 ### Adicionado
-- Nova função de transformação "Negativo" no menu Intensidade
+- Nova função de transformação "Negativo" no menu Ferramentas
 - Implementação da função de negativo usando lookup tables (S = L-1-r)
 - Suporte para processamento de imagens em escala de cinza e coloridas (RGB/RGBA)
 - Preservação do canal alpha em imagens com transparência
@@ -154,7 +161,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 ## [0.1.5] - 2024-05-04
 
 ### Adicionado
-- Submenu "Intensidade" no menu Ferramentas
+- Submenu "Intensidade" no menu Ferramentas (posteriormente removido na v0.1.21)
 - Função "Intensidade Zero" para alterar todos os pixels da imagem para zero
 - Nova estrutura modular para ferramentas de processamento de imagem
 - Separação entre GUI e lógica de processamento de imagem
