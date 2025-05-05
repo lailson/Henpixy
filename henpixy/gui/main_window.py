@@ -10,6 +10,7 @@ import os
 
 # Importar nossas ferramentas
 from henpixy.tools.intensity import zero_intensity
+from henpixy.tools.negative import negative
 
 # Importar o gerenciador de histórico
 from henpixy.janela.historico import HistoryManager, HistoryDialog
@@ -145,6 +146,11 @@ class MainWindow(QMainWindow):
         zero_intensity_action.triggered.connect(self.apply_zero_intensity)
         intensity_menu.addAction(zero_intensity_action)
         
+        # Ação Negativo
+        negative_action = QAction("Negativo", self)
+        negative_action.triggered.connect(self.apply_negative)
+        intensity_menu.addAction(negative_action)
+        
         # Adicionar submenu ao menu Ferramentas
         tools_menu.addMenu(intensity_menu)
         
@@ -234,6 +240,35 @@ class MainWindow(QMainWindow):
             
             # Adiciona ao histórico
             self.history_manager.add_item(processed_image, "Intensidade Zero")
+            
+            # Atualiza a imagem atual
+            self.current_image = processed_image
+            
+            # Exibe a imagem processada
+            self.update_display_image()
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                "Erro",
+                f"Não foi possível processar a imagem.\nErro: {str(e)}"
+            )
+    
+    def apply_negative(self):
+        """Aplica a função de negativo na imagem atual"""
+        if self.current_image is None:
+            QMessageBox.warning(
+                self,
+                "Aviso",
+                "Não há imagem para processar."
+            )
+            return
+        
+        try:
+            # Aplica a função de negativo
+            processed_image = negative(self.current_image)
+            
+            # Adiciona ao histórico
+            self.history_manager.add_item(processed_image, "Negativo")
             
             # Atualiza a imagem atual
             self.current_image = processed_image
