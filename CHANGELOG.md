@@ -5,6 +5,19 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.1.23] - 2024-05-19
+
+### Adicionado
+- Implementação dos filtros de estatísticas de ordem (Máximo, Mínimo e Mediana) no menu Ferramentas
+- Diálogo para seleção do tipo de filtro e tamanho do kernel
+- Implementação eficiente de algoritmos para filtros de ordem em imagens de escala de cinza e coloridas
+- Descrições detalhadas das características e aplicações de cada tipo de filtro
+- Aplicações específicas:
+  - Filtro de Máximo: destaca objetos claros e expande regiões claras (similar à dilatação morfológica)
+  - Filtro de Mínimo: destaca objetos escuros e expande regiões escuras (similar à erosão morfológica)
+  - Filtro de Mediana: remove ruído "sal e pimenta" preservando melhor as bordas
+- Integração com o sistema de histórico para facilitar comparações
+
 ## [0.1.22] - 2024-05-19
 
 ### Adicionado

@@ -12,6 +12,7 @@ from .histogram_dialog import HistogramDialog
 from .histogram_window import HistogramWindow
 from .pseudocolor_dialog import PseudocolorDialog
 from .mean_filter_dialog import MeanFilterDialog
+from .order_statistics_dialog import OrderStatisticsDialog
 from PIL import Image
 import numpy as np
 import os
@@ -22,7 +23,7 @@ from henpixy.tools.negative import negative
 from henpixy.tools.power import power_transform
 from henpixy.tools.contrast_stretching import contrast_stretching
 from henpixy.tools.bit_plane_slicing import extract_bit_plane, get_image_bit_depth
-from henpixy.tools.spatial_filtering import mean_filter
+from henpixy.tools.spatial_filtering import mean_filter, min_filter, max_filter, median_filter
 
 # Importar o gerenciador de histórico
 from henpixy.janela.historico import HistoryManager, HistoryDialog
@@ -268,6 +269,11 @@ class MainWindow(QMainWindow):
         mean_filter_action = QAction("Filtro da Média", self)
         mean_filter_action.triggered.connect(self.apply_mean_filter)
         tools_menu.addAction(mean_filter_action)
+        
+        # Ação Filtros de Estatísticas de Ordem
+        order_statistics_action = QAction("Filtros de Estatísticas de Ordem", self)
+        order_statistics_action.triggered.connect(self.apply_order_statistics_filter)
+        tools_menu.addAction(order_statistics_action)
         
         # Menu Janela
         window_menu = menubar.addMenu("Janela")
@@ -1198,6 +1204,52 @@ class MainWindow(QMainWindow):
                 self,
                 "Erro",
                 f"Não foi possível aplicar o filtro da média.\nErro: {str(e)}"
+            )
+    
+    def apply_order_statistics_filter(self):
+        """Aplica filtros de estatísticas de ordem (máximo, mínimo, mediana) na imagem atual"""
+        if self.current_image is None:
+            QMessageBox.warning(
+                self,
+                "Aviso",
+                "Não há imagem para processar."
+            )
+            return
+        
+        try:
+            # Cria o diálogo para configuração dos filtros
+            dialog = OrderStatisticsDialog(self)
+            
+            # Se o usuário aceitar, aplica o filtro selecionado
+            if dialog.exec() == QDialog.Accepted:
+                # Obtém o tamanho do kernel e tipo de filtro selecionados
+                kernel_size = dialog.get_kernel_size()
+                filter_type = dialog.get_filter_type()
+                
+                # Aplica o filtro selecionado
+                if filter_type == "max":
+                    filtered_image = max_filter(self.current_image, kernel_size)
+                    filter_name = "Máximo"
+                elif filter_type == "min":
+                    filtered_image = min_filter(self.current_image, kernel_size)
+                    filter_name = "Mínimo"
+                else:  # mediana
+                    filtered_image = median_filter(self.current_image, kernel_size)
+                    filter_name = "Mediana"
+                
+                # Adiciona ao histórico
+                self.history_manager.add_item(filtered_image, f"Filtro de {filter_name} {kernel_size}x{kernel_size}")
+                
+                # Atualiza a imagem atual
+                self.current_image = filtered_image
+                
+                # Exibe a imagem processada
+                self.update_display_image()
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                "Erro",
+                f"Não foi possível aplicar o filtro de estatística de ordem.\nErro: {str(e)}"
             )
     
     def show_histogram(self):
