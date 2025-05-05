@@ -5,6 +5,17 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.1.22] - 2024-05-19
+
+### Adicionado
+- Implementação do filtro de suavização da média no menu Ferramentas
+- Diálogo para configuração do tamanho do kernel do filtro (3x3, 5x5, 7x7, 9x9, 11x11)
+- Nova implementação de filtragem espacial no módulo `spatial_filtering.py`
+- Algoritmo eficiente de filtragem da média para imagens em escala de cinza e coloridas
+- Preservação do canal alpha em imagens com transparência
+- Informações sobre os efeitos e aplicações do filtro de suavização
+- Integração com o sistema de histórico para facilitar comparações
+
 ## [0.1.21] - 2024-05-18
 
 ### Alterado

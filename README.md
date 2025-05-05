@@ -17,7 +17,7 @@ A aplicação deve ter as seguintes funcionalidades:
 - ✅ Fatiamento por Planos de Bits: possibilitando ao usuário selecionar o plano de bits desejado para a visualização
 - ✅ Equalização de histograma: o programa deve exibir a imagem equalizada, o histograma da imagem original e o histograma da imagem equalizada para fins de comparação
 - ✅ Fatiamento por Intensidades para Pseudocores
-- ⬜ Filtros de suavização: Média
+- ✅ Filtros de suavização: Média
 - ⬜ Filtros de estatísticas de ordem: Máx, Mín e Mediana
 - ⬜ Filtro Laplaciano: utilizando a máscara com centro negativo e que inclui os termos diagonais, faça o que se peder: 
   - (a) apresente o resultado do laplaciano sem ajuste

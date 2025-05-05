@@ -11,6 +11,7 @@ from .bit_plane_dialog import BitPlaneDialog
 from .histogram_dialog import HistogramDialog
 from .histogram_window import HistogramWindow
 from .pseudocolor_dialog import PseudocolorDialog
+from .mean_filter_dialog import MeanFilterDialog
 from PIL import Image
 import numpy as np
 import os
@@ -21,6 +22,7 @@ from henpixy.tools.negative import negative
 from henpixy.tools.power import power_transform
 from henpixy.tools.contrast_stretching import contrast_stretching
 from henpixy.tools.bit_plane_slicing import extract_bit_plane, get_image_bit_depth
+from henpixy.tools.spatial_filtering import mean_filter
 
 # Importar o gerenciador de histórico
 from henpixy.janela.historico import HistoryManager, HistoryDialog
@@ -258,6 +260,14 @@ class MainWindow(QMainWindow):
         pseudocolor_action = QAction("Fatiamento por Intensidades para Pseudocores", self)
         pseudocolor_action.triggered.connect(self.apply_pseudocolor)
         tools_menu.addAction(pseudocolor_action)
+        
+        # Adiciona um separador para os filtros
+        tools_menu.addSeparator()
+        
+        # Ação Filtro da Média
+        mean_filter_action = QAction("Filtro da Média", self)
+        mean_filter_action.triggered.connect(self.apply_mean_filter)
+        tools_menu.addAction(mean_filter_action)
         
         # Menu Janela
         window_menu = menubar.addMenu("Janela")
@@ -1151,6 +1161,43 @@ class MainWindow(QMainWindow):
                 self,
                 "Erro",
                 f"Não foi possível aplicar o fatiamento por intensidades.\nErro: {str(e)}"
+            )
+    
+    def apply_mean_filter(self):
+        """Aplica o filtro de suavização da média na imagem atual"""
+        if self.current_image is None:
+            QMessageBox.warning(
+                self,
+                "Aviso",
+                "Não há imagem para processar."
+            )
+            return
+        
+        try:
+            # Cria o diálogo para configuração do filtro
+            dialog = MeanFilterDialog(self)
+            
+            # Se o usuário aceitar, aplica o filtro
+            if dialog.exec() == QDialog.Accepted:
+                # Obtém o tamanho do kernel selecionado
+                kernel_size = dialog.get_kernel_size()
+                
+                # Aplica o filtro da média
+                filtered_image = mean_filter(self.current_image, kernel_size)
+                
+                # Adiciona ao histórico
+                self.history_manager.add_item(filtered_image, f"Filtro da Média {kernel_size}x{kernel_size}")
+                
+                # Atualiza a imagem atual
+                self.current_image = filtered_image
+                
+                # Exibe a imagem processada
+                self.update_display_image()
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                "Erro",
+                f"Não foi possível aplicar o filtro da média.\nErro: {str(e)}"
             )
     
     def show_histogram(self):
