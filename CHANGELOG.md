@@ -5,6 +5,18 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.1.17] - 2024-05-16
+
+### Adicionado
+- Nova função "Fatiamento por Planos de Bits" no menu Ferramentas
+- Implementação da decomposição de imagens em seus 8 planos de bits (0-7)
+- Diálogo interativo para visualização de planos de bits individuais
+- Funcionalidade para reconstrução de imagens a partir de planos selecionados
+- Informações detalhadas sobre cada plano, incluindo seu peso e intervalo de intensidade
+- Interface intuitiva com controles de seleção para cada plano
+- Suporte para visualizar o impacto de cada plano de bits na qualidade da imagem
+- Integração com o sistema de histórico para facilitar comparações
+
 ## [0.1.16] - 2024-05-15
 
 ### Adicionado

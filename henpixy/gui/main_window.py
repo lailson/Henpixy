@@ -7,6 +7,7 @@ from PySide6.QtGui import QAction, QPixmap, QImage, QCursor
 from PySide6.QtCore import Qt, QPoint, QRect
 from .about_dialog import AboutDialog
 from .contrast_stretching_dialog import ContrastStretchingDialog
+from .bit_plane_dialog import BitPlaneDialog
 from PIL import Image
 import numpy as np
 import os
@@ -16,6 +17,7 @@ from henpixy.tools.intensity import zero_intensity
 from henpixy.tools.negative import negative
 from henpixy.tools.power import power_transform
 from henpixy.tools.contrast_stretching import contrast_stretching
+from henpixy.tools.bit_plane_slicing import extract_bit_plane, reconstruct_from_bit_planes
 
 # Importar o gerenciador de histórico
 from henpixy.janela.historico import HistoryManager, HistoryDialog
@@ -238,6 +240,11 @@ class MainWindow(QMainWindow):
         contrast_stretching_action = QAction("Alargamento de Contraste", self)
         contrast_stretching_action.triggered.connect(self.apply_contrast_stretching)
         intensity_menu.addAction(contrast_stretching_action)
+        
+        # Ação Fatiamento por Planos de Bits
+        bit_plane_action = QAction("Fatiamento por Planos de Bits", self)
+        bit_plane_action.triggered.connect(self.apply_bit_plane_slicing)
+        intensity_menu.addAction(bit_plane_action)
         
         # Adicionar submenu ao menu Ferramentas
         tools_menu.addMenu(intensity_menu)
@@ -955,4 +962,109 @@ class MainWindow(QMainWindow):
                 self,
                 "Erro",
                 f"Não foi possível processar a imagem.\nErro: {str(e)}"
+            )
+    
+    def apply_bit_plane_slicing(self):
+        """Aplica o fatiamento por planos de bits na imagem atual"""
+        if self.current_image is None:
+            QMessageBox.warning(
+                self,
+                "Aviso",
+                "Não há imagem para processar."
+            )
+            return
+        
+        try:
+            # Cria uma instância do diálogo
+            dialog = BitPlaneDialog(self)
+            
+            # Conecta os sinais aos slots correspondentes
+            dialog.bit_plane_selected.connect(self.on_bit_plane_selected)
+            dialog.reconstruction_selected.connect(self.on_reconstruction_selected)
+            
+            # Exibe o diálogo (não modal para permitir visualização enquanto aberto)
+            dialog.show()
+            
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                "Erro",
+                f"Não foi possível abrir o diálogo de fatiamento por planos de bits.\nErro: {str(e)}"
+            )
+    
+    def on_bit_plane_selected(self, plane):
+        """
+        Processa a seleção de um plano de bits para visualização
+        
+        Args:
+            plane (int): O plano de bits a ser visualizado (0-7)
+        """
+        try:
+            # Extrai o plano de bits selecionado
+            bit_plane_image = extract_bit_plane(self.current_image, plane)
+            
+            # Adiciona ao histórico
+            self.history_manager.add_item(
+                bit_plane_image,
+                f"Plano de Bits {plane} (peso {2**plane})"
+            )
+            
+            # Atualiza a imagem atual
+            self.current_image = bit_plane_image
+            
+            # Exibe a imagem processada
+            self.update_display_image()
+            
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                "Erro",
+                f"Não foi possível extrair o plano de bits.\nErro: {str(e)}"
+            )
+    
+    def on_reconstruction_selected(self, planes):
+        """
+        Processa a reconstrução da imagem a partir dos planos de bits selecionados
+        
+        Args:
+            planes (list): Lista de planos de bits a serem incluídos na reconstrução
+        """
+        try:
+            # Obtém a imagem original do histórico
+            original_image = None
+            
+            # Verifica se o histórico contém a imagem original
+            if self.history_manager.history_items:
+                for item in self.history_manager.history_items:
+                    if item.description.startswith("Original:"):
+                        original_image = item.image
+                        break
+            
+            # Se não encontrar no histórico, usa a imagem atual
+            if original_image is None:
+                original_image = self.current_image
+            
+            # Reconstrói a imagem a partir dos planos selecionados
+            reconstructed_image = reconstruct_from_bit_planes(original_image, planes)
+            
+            # Formata a descrição dos planos utilizados
+            planes_str = ", ".join([str(p) for p in sorted(planes)])
+            
+            # Adiciona ao histórico
+            self.history_manager.add_item(
+                reconstructed_image,
+                f"Reconstrução de Planos: {planes_str}"
+            )
+            
+            # Atualiza a imagem atual
+            self.current_image = reconstructed_image
+            
+            # Exibe a imagem processada
+            self.update_display_image()
+            
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                "Erro",
+                f"Não foi possível reconstruir a imagem.\nErro: {str(e)}"
             ) 
