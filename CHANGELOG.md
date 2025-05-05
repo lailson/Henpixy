@@ -5,6 +5,15 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.1.18] - 2024-05-16
+
+### Alterado
+- Aprimorado o "Fatiamento por Planos de Bits" para detectar automaticamente a profundidade de bits da imagem
+- Adicionada exibição da intensidade máxima detectada na imagem
+- Melhorada a interface com informações detalhadas sobre cada plano de bits
+- Reorganizado o layout para melhor visualização das propriedades de cada plano
+- Removida a funcionalidade de reconstrução para simplificar a interface
+
 ## [0.1.17] - 2024-05-16
 
 ### Adicionado

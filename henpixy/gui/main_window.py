@@ -17,7 +17,7 @@ from henpixy.tools.intensity import zero_intensity
 from henpixy.tools.negative import negative
 from henpixy.tools.power import power_transform
 from henpixy.tools.contrast_stretching import contrast_stretching
-from henpixy.tools.bit_plane_slicing import extract_bit_plane, reconstruct_from_bit_planes
+from henpixy.tools.bit_plane_slicing import extract_bit_plane, get_image_bit_depth
 
 # Importar o gerenciador de histórico
 from henpixy.janela.historico import HistoryManager, HistoryDialog
@@ -975,12 +975,14 @@ class MainWindow(QMainWindow):
             return
         
         try:
-            # Cria uma instância do diálogo
-            dialog = BitPlaneDialog(self)
+            # Determina a profundidade de bits e intensidade máxima da imagem
+            bit_depth, max_intensity = get_image_bit_depth(self.current_image)
             
-            # Conecta os sinais aos slots correspondentes
+            # Cria uma instância do diálogo com as informações da imagem
+            dialog = BitPlaneDialog(self, bit_depth, max_intensity)
+            
+            # Conecta o sinal ao slot correspondente
             dialog.bit_plane_selected.connect(self.on_bit_plane_selected)
-            dialog.reconstruction_selected.connect(self.on_reconstruction_selected)
             
             # Exibe o diálogo (não modal para permitir visualização enquanto aberto)
             dialog.show()
@@ -997,7 +999,7 @@ class MainWindow(QMainWindow):
         Processa a seleção de um plano de bits para visualização
         
         Args:
-            plane (int): O plano de bits a ser visualizado (0-7)
+            plane (int): O plano de bits a ser visualizado
         """
         try:
             # Extrai o plano de bits selecionado
@@ -1020,51 +1022,4 @@ class MainWindow(QMainWindow):
                 self,
                 "Erro",
                 f"Não foi possível extrair o plano de bits.\nErro: {str(e)}"
-            )
-    
-    def on_reconstruction_selected(self, planes):
-        """
-        Processa a reconstrução da imagem a partir dos planos de bits selecionados
-        
-        Args:
-            planes (list): Lista de planos de bits a serem incluídos na reconstrução
-        """
-        try:
-            # Obtém a imagem original do histórico
-            original_image = None
-            
-            # Verifica se o histórico contém a imagem original
-            if self.history_manager.history_items:
-                for item in self.history_manager.history_items:
-                    if item.description.startswith("Original:"):
-                        original_image = item.image
-                        break
-            
-            # Se não encontrar no histórico, usa a imagem atual
-            if original_image is None:
-                original_image = self.current_image
-            
-            # Reconstrói a imagem a partir dos planos selecionados
-            reconstructed_image = reconstruct_from_bit_planes(original_image, planes)
-            
-            # Formata a descrição dos planos utilizados
-            planes_str = ", ".join([str(p) for p in sorted(planes)])
-            
-            # Adiciona ao histórico
-            self.history_manager.add_item(
-                reconstructed_image,
-                f"Reconstrução de Planos: {planes_str}"
-            )
-            
-            # Atualiza a imagem atual
-            self.current_image = reconstructed_image
-            
-            # Exibe a imagem processada
-            self.update_display_image()
-            
-        except Exception as e:
-            QMessageBox.critical(
-                self,
-                "Erro",
-                f"Não foi possível reconstruir a imagem.\nErro: {str(e)}"
             ) 

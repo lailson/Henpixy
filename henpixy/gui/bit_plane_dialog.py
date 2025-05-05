@@ -3,61 +3,57 @@ Diálogo para visualização e manipulação de planos de bits
 """
 
 from PySide6.QtWidgets import (
-    QDialog, QVBoxLayout, QHBoxLayout, QLabel, QCheckBox,
-    QDialogButtonBox, QGroupBox, QRadioButton, QPushButton,
+    QDialog, QVBoxLayout, QHBoxLayout, QLabel, 
+    QGroupBox, QRadioButton, QPushButton,
     QButtonGroup, QScrollArea, QWidget, QGridLayout, QMessageBox
 )
 from PySide6.QtCore import Qt, Signal
 
 class BitPlaneDialog(QDialog):
     """
-    Diálogo para fatiamento e reconstrução por planos de bits
+    Diálogo para fatiamento por planos de bits
     
-    Permite ao usuário:
-    - Visualizar um plano de bits específico
-    - Reconstruir a imagem selecionando quais planos incluir
+    Permite ao usuário visualizar um plano de bits específico
     """
     
     # Sinal emitido quando um plano de bits é selecionado para visualização
     bit_plane_selected = Signal(int)
     
-    # Sinal emitido quando planos de bits são selecionados para reconstrução
-    reconstruction_selected = Signal(list)
-    
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, bit_depth=8, max_intensity=255):
         super().__init__(parent)
         
         self.setWindowTitle("Fatiamento por Planos de Bits")
         self.resize(550, 400)
         
+        # Armazena a profundidade de bits e intensidade máxima
+        self.bit_depth = bit_depth
+        self.max_intensity = max_intensity
+        
         # Layout principal
         self.main_layout = QVBoxLayout(self)
         
-        # Informações sobre planos de bits
+        # Informações sobre a imagem e planos de bits
+        self.info_layout = QVBoxLayout()
+        
+        self.intensity_label = QLabel(
+            f"<b>Intensidade máxima detectada:</b> {self.max_intensity}"
+        )
+        self.info_layout.addWidget(self.intensity_label)
+        
+        self.bit_depth_label = QLabel(
+            f"<b>Profundidade de bits (quantidade de planos):</b> {self.bit_depth}"
+        )
+        self.info_layout.addWidget(self.bit_depth_label)
+        
         self.info_label = QLabel(
-            "Uma imagem com 8 bits (256 níveis de intensidade) pode ser decomposta "
-            "em 8 planos de bits. Cada plano representa o estado (0 ou 1) de um bit "
-            "específico em cada pixel da imagem."
+            f"Uma imagem com {self.bit_depth} bits ({self.max_intensity+1} níveis de intensidade) "
+            f"pode ser decomposta em {self.bit_depth} planos de bits. Cada plano representa "
+            "o estado (0 ou 1) de um bit específico em cada pixel da imagem."
         )
         self.info_label.setWordWrap(True)
-        self.main_layout.addWidget(self.info_label)
+        self.info_layout.addWidget(self.info_label)
         
-        # Seção para escolher o modo de visualização
-        self.mode_group = QButtonGroup(self)
-        self.mode_layout = QHBoxLayout()
-        
-        # Opção para visualizar plano único
-        self.view_plane_radio = QRadioButton("Visualizar plano de bits")
-        self.view_plane_radio.setChecked(True)
-        self.mode_group.addButton(self.view_plane_radio)
-        self.mode_layout.addWidget(self.view_plane_radio)
-        
-        # Opção para reconstruir a partir de planos selecionados
-        self.reconstruct_radio = QRadioButton("Reconstruir imagem a partir de planos selecionados")
-        self.mode_group.addButton(self.reconstruct_radio)
-        self.mode_layout.addWidget(self.reconstruct_radio)
-        
-        self.main_layout.addLayout(self.mode_layout)
+        self.main_layout.addLayout(self.info_layout)
         
         # Criar área de rolagem para os planos de bits
         self.scroll_area = QScrollArea()
@@ -73,31 +69,40 @@ class BitPlaneDialog(QDialog):
         self.plane_radios = []
         self.bit_plane_group = QButtonGroup(self)
         
-        # Adicionar botões de radio e de checagem para cada plano de bits
-        for i in range(8):
+        # Adicionar cabeçalho ao layout
+        self.planes_layout.addWidget(QLabel("<b>Plano de Bits</b>"), 0, 0)
+        self.planes_layout.addWidget(QLabel("<b>Peso (Contribuição)</b>"), 0, 1)
+        self.planes_layout.addWidget(QLabel("<b>Intervalo de Intensidade</b>"), 0, 2)
+        
+        # Adicionar botões de rádio para cada plano de bits
+        for i in range(self.bit_depth):
             # Calcular o peso/contribuição do plano (2^i)
             weight = 2 ** i
             intensity_range = f"[{0 if i == 0 else 2**(i-1)}, {2**i - 1}]"
             
-            # Radio button para visualização de plano único
-            radio = QRadioButton(f"Plano {i}: Peso {weight}, Intensidade {intensity_range}")
+            # Rótulo do plano (plano 0, plano 1, ...)
+            plane_label = QLabel(f"Plano {i}")
+            
+            # Rótulo do peso (1, 2, 4, 8, ...)
+            weight_label = QLabel(f"{weight}")
+            
+            # Rótulo do intervalo de intensidade
+            range_label = QLabel(intensity_range)
+            
+            # Radio button para seleção
+            radio = QRadioButton("")
             self.plane_radios.append(radio)
             self.bit_plane_group.addButton(radio, i)
             
-            # Checkbox para reconstrução
-            checkbox = QCheckBox()
-            checkbox.setChecked(True)  # Por padrão, todos os planos estão selecionados
-            
             # Adiciona ao layout
-            self.planes_layout.addWidget(radio, i, 0)
-            self.planes_layout.addWidget(checkbox, i, 1)
-        
-        # Adiciona a descrição de colunas
-        self.planes_layout.addWidget(QLabel("Plano de Bits"), 0, 0)
-        self.planes_layout.addWidget(QLabel("Incluir na Reconstrução"), 0, 1)
+            row = i + 1  # +1 por causa do cabeçalho
+            self.planes_layout.addWidget(radio, row, 0)
+            self.planes_layout.addWidget(weight_label, row, 1)
+            self.planes_layout.addWidget(range_label, row, 2)
         
         # Seleciona o plano mais significativo por padrão
-        self.plane_radios[7].setChecked(True)
+        if self.bit_depth > 0:
+            self.plane_radios[self.bit_depth - 1].setChecked(True)
         
         self.scroll_layout.addWidget(self.planes_group)
         self.scroll_area.setWidget(self.scroll_widget)
@@ -111,40 +116,12 @@ class BitPlaneDialog(QDialog):
         self.view_button.clicked.connect(self.on_view_clicked)
         self.button_layout.addWidget(self.view_button)
         
-        # Botão para reconstruir a partir dos planos selecionados
-        self.reconstruct_button = QPushButton("Reconstruir")
-        self.reconstruct_button.clicked.connect(self.on_reconstruct_clicked)
-        self.button_layout.addWidget(self.reconstruct_button)
-        
         # Botão para fechar o diálogo
         self.close_button = QPushButton("Fechar")
         self.close_button.clicked.connect(self.reject)
         self.button_layout.addWidget(self.close_button)
         
         self.main_layout.addLayout(self.button_layout)
-        
-        # Conecta os botões de rádio do modo para atualizar a UI
-        self.view_plane_radio.toggled.connect(self.update_ui)
-        self.reconstruct_radio.toggled.connect(self.update_ui)
-        
-        # Inicializa a UI
-        self.update_ui()
-    
-    def update_ui(self):
-        """Atualiza a interface baseada no modo selecionado"""
-        view_mode = self.view_plane_radio.isChecked()
-        
-        # Atualiza os botões
-        self.view_button.setEnabled(view_mode)
-        self.reconstruct_button.setEnabled(not view_mode)
-        
-        # Atualiza o texto dos botões
-        if view_mode:
-            self.view_button.setText("Visualizar")
-            self.reconstruct_button.setText("Reconstruir")
-        else:
-            self.view_button.setText("Visualizar")
-            self.reconstruct_button.setText("Reconstruir")
     
     def on_view_clicked(self):
         """Ação quando o botão de visualizar é clicado"""
@@ -161,39 +138,68 @@ class BitPlaneDialog(QDialog):
                 "Selecione um plano de bits para visualizar."
             )
     
-    def on_reconstruct_clicked(self):
-        """Ação quando o botão de reconstruir é clicado"""
-        # Obtém os planos selecionados para reconstrução
-        selected_planes = []
-        
-        for i, radio in enumerate(self.plane_radios):
-            # Para cada plano, verifica se o checkbox está marcado
-            checkbox = self.planes_layout.itemAtPosition(i+1, 1).widget()
-            if checkbox.isChecked():
-                selected_planes.append(i)
-        
-        if selected_planes:
-            # Emite o sinal com os planos selecionados
-            self.reconstruction_selected.emit(selected_planes)
-        else:
-            QMessageBox.warning(
-                self,
-                "Aviso",
-                "Selecione pelo menos um plano de bits para reconstrução."
-            )
-    
     def get_selected_plane(self):
         """Retorna o plano de bits selecionado para visualização"""
         return self.bit_plane_group.checkedId()
     
-    def get_selected_planes_for_reconstruction(self):
-        """Retorna a lista de planos selecionados para reconstrução"""
-        selected_planes = []
+    def update_image_info(self, bit_depth, max_intensity):
+        """Atualiza as informações da imagem e recria os controles de planos de bits"""
+        self.bit_depth = bit_depth
+        self.max_intensity = max_intensity
         
-        for i, radio in enumerate(self.plane_radios):
-            # Para cada plano, verifica se o checkbox está marcado
-            checkbox = self.planes_layout.itemAtPosition(i+1, 1).widget()
-            if checkbox.isChecked():
-                selected_planes.append(i)
+        # Atualiza os rótulos de informação
+        self.intensity_label.setText(f"<b>Intensidade máxima detectada:</b> {self.max_intensity}")
+        self.bit_depth_label.setText(f"<b>Profundidade de bits (quantidade de planos):</b> {self.bit_depth}")
+        self.info_label.setText(
+            f"Uma imagem com {self.bit_depth} bits ({self.max_intensity+1} níveis de intensidade) "
+            f"pode ser decomposta em {self.bit_depth} planos de bits. Cada plano representa "
+            "o estado (0 ou 1) de um bit específico em cada pixel da imagem."
+        )
         
-        return selected_planes 
+        # Limpa os controles existentes
+        for radio in self.plane_radios:
+            self.bit_plane_group.removeButton(radio)
+        
+        # Limpa o layout de planos
+        while self.planes_layout.count():
+            item = self.planes_layout.takeAt(0)
+            if item.widget():
+                item.widget().deleteLater()
+        
+        # Reinicializa a lista de rádios
+        self.plane_radios = []
+        
+        # Adicionar cabeçalho ao layout
+        self.planes_layout.addWidget(QLabel("<b>Plano de Bits</b>"), 0, 0)
+        self.planes_layout.addWidget(QLabel("<b>Peso (Contribuição)</b>"), 0, 1)
+        self.planes_layout.addWidget(QLabel("<b>Intervalo de Intensidade</b>"), 0, 2)
+        
+        # Recria os controles para cada plano
+        for i in range(self.bit_depth):
+            # Calcular o peso/contribuição do plano (2^i)
+            weight = 2 ** i
+            intensity_range = f"[{0 if i == 0 else 2**(i-1)}, {2**i - 1}]"
+            
+            # Rótulo do plano
+            plane_label = QLabel(f"Plano {i}")
+            
+            # Rótulo do peso
+            weight_label = QLabel(f"{weight}")
+            
+            # Rótulo do intervalo de intensidade
+            range_label = QLabel(intensity_range)
+            
+            # Radio button para seleção
+            radio = QRadioButton("")
+            self.plane_radios.append(radio)
+            self.bit_plane_group.addButton(radio, i)
+            
+            # Adiciona ao layout
+            row = i + 1  # +1 por causa do cabeçalho
+            self.planes_layout.addWidget(radio, row, 0)
+            self.planes_layout.addWidget(weight_label, row, 1)
+            self.planes_layout.addWidget(range_label, row, 2)
+        
+        # Seleciona o plano mais significativo por padrão
+        if self.bit_depth > 0:
+            self.plane_radios[self.bit_depth - 1].setChecked(True) 
