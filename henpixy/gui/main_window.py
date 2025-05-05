@@ -75,6 +75,12 @@ class MainWindow(QMainWindow):
         open_action.triggered.connect(self.open_file)
         file_menu.addAction(open_action)
         
+        # Ação Abrir Modelo
+        open_sample_action = QAction("Abrir modelo", self)
+        open_sample_action.setShortcut("Ctrl+M")
+        open_sample_action.triggered.connect(self.open_sample)
+        file_menu.addAction(open_sample_action)
+        
         # Ação Salvar
         save_action = QAction("Salvar", self)
         save_action.setShortcut("Ctrl+S")
@@ -637,4 +643,97 @@ class MainWindow(QMainWindow):
         self.info_dialog.set_image_info(self.current_image_path, self.current_image)
         
         # Exibe o diálogo
-        self.info_dialog.show() 
+        self.info_dialog.show()
+    
+    def open_sample(self):
+        """Abre uma imagem de amostra do diretório de amostras"""
+        # Caminho para o diretório de amostras
+        samples_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "samples")
+        
+        # Verifica se o diretório de amostras existe
+        if not os.path.exists(samples_dir):
+            QMessageBox.warning(
+                self,
+                "Aviso",
+                "O diretório de amostras não existe ou não foi encontrado."
+            )
+            return
+        
+        # Lista os arquivos no diretório de amostras
+        sample_files = [f for f in os.listdir(samples_dir) 
+                      if os.path.isfile(os.path.join(samples_dir, f)) and
+                      any(f.lower().endswith(ext) for ext in 
+                          ['.png', '.jpg', '.jpeg', '.bmp', '.gif', '.tiff', '.tif', '.webp'])]
+        
+        if not sample_files:
+            QMessageBox.information(
+                self,
+                "Informação",
+                "Não há imagens de amostra disponíveis.\n"
+                "Adicione imagens ao diretório 'henpixy/samples' para usar esta funcionalidade."
+            )
+            return
+        
+        # Cria um menu de seleção com as imagens disponíveis
+        sample_menu = QMenu(self)
+        
+        for sample_file in sorted(sample_files):
+            action = QAction(sample_file, self)
+            action.triggered.connect(lambda checked, file=sample_file: self.load_sample(file))
+            sample_menu.addAction(action)
+        
+        # Exibe o menu de seleção
+        cursor_pos = QCursor.pos()
+        sample_menu.exec_(cursor_pos)
+    
+    def load_sample(self, sample_file):
+        """
+        Carrega uma imagem de amostra específica
+        
+        Args:
+            sample_file (str): Nome do arquivo de amostra
+        """
+        # Caminho completo para a imagem de amostra
+        samples_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "samples")
+        file_path = os.path.join(samples_dir, sample_file)
+        
+        if not os.path.exists(file_path):
+            QMessageBox.warning(
+                self,
+                "Aviso",
+                f"O arquivo '{sample_file}' não foi encontrado."
+            )
+            return
+        
+        try:
+            # Abrir a imagem usando Pillow
+            image = Image.open(file_path)
+            
+            # Guardar a imagem original e o caminho
+            self.current_image = image
+            self.current_image_path = file_path
+            
+            # Adicionar ao histórico
+            self.history_manager.clear()  # Limpa o histórico anterior
+            self.history_manager.add_item(image, f"Original: {sample_file}")
+            
+            # Redefine o zoom ao abrir uma nova imagem
+            self.zoom_factor = 1.0
+            
+            # Atualizar o título da janela
+            self.update_window_title()
+            
+            # Exibir a imagem
+            self.update_display_image()
+            
+            # Informar ao usuário
+            statusBar = self.statusBar()
+            if statusBar:
+                statusBar.showMessage(f"Imagem de amostra carregada: {sample_file}", 3000)
+            
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                "Erro",
+                f"Não foi possível abrir a imagem.\nErro: {str(e)}"
+            ) 

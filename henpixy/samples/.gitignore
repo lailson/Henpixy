@@ -1,0 +1,16 @@
+# Ignorar todas as imagens neste diretório
+*.png
+*.jpg
+*.jpeg
+*.bmp
+*.gif
+*.tiff
+*.tif
+*.webp
+*.ico
+*.psd
+*.xbm
+*.xpm
+
+# Não ignorar o arquivo README
+!README.md 
