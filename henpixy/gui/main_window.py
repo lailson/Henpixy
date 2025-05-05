@@ -13,6 +13,7 @@ from .histogram_window import HistogramWindow
 from .pseudocolor_dialog import PseudocolorDialog
 from .mean_filter_dialog import MeanFilterDialog
 from .order_statistics_dialog import OrderStatisticsDialog
+from .laplacian_dialog import LaplacianDialog
 from PIL import Image
 import numpy as np
 import os
@@ -23,7 +24,7 @@ from henpixy.tools.negative import negative
 from henpixy.tools.power import power_transform
 from henpixy.tools.contrast_stretching import contrast_stretching
 from henpixy.tools.bit_plane_slicing import extract_bit_plane, get_image_bit_depth
-from henpixy.tools.spatial_filtering import mean_filter, min_filter, max_filter, median_filter
+from henpixy.tools.spatial_filtering import mean_filter, min_filter, max_filter, median_filter, laplacian_filter
 
 # Importar o gerenciador de histórico
 from henpixy.janela.historico import HistoryManager, HistoryDialog
@@ -274,6 +275,11 @@ class MainWindow(QMainWindow):
         order_statistics_action = QAction("Filtros de Estatísticas de Ordem", self)
         order_statistics_action.triggered.connect(self.apply_order_statistics_filter)
         tools_menu.addAction(order_statistics_action)
+        
+        # Ação Filtro Laplaciano
+        laplacian_filter_action = QAction("Filtro Laplaciano", self)
+        laplacian_filter_action.triggered.connect(self.apply_laplacian_filter)
+        tools_menu.addAction(laplacian_filter_action)
         
         # Menu Janela
         window_menu = menubar.addMenu("Janela")
@@ -1273,4 +1279,53 @@ class MainWindow(QMainWindow):
         self.histogram_window = HistogramWindow(self, self.current_image)
         
         # Exibe a janela
-        self.histogram_window.show() 
+        self.histogram_window.show()
+
+    def apply_laplacian_filter(self):
+        """Aplica o filtro Laplaciano na imagem atual"""
+        if self.current_image is None:
+            QMessageBox.warning(
+                self,
+                "Aviso",
+                "Não há imagem para processar."
+            )
+            return
+        
+        try:
+            # Cria o diálogo para configuração do filtro Laplaciano
+            dialog = LaplacianDialog(self.current_image, self)
+            
+            # Se o usuário aceitar, aplica o filtro
+            if dialog.exec() == QDialog.Accepted:
+                # Obtém os parâmetros configurados
+                params = dialog.get_parameters()
+                include_diagonals = params['include_diagonals']
+                
+                # Aplica o filtro Laplaciano com aguçamento
+                filtered_image = laplacian_filter(
+                    self.current_image,
+                    include_diagonals=include_diagonals,
+                    apply_adjustment=False,
+                    sharpen_image=True
+                )
+                
+                # Define o nome do tipo de kernel para o histórico
+                kernel_type = "com diagonais" if include_diagonals else "sem diagonais"
+                
+                # Adiciona ao histórico
+                self.history_manager.add_item(
+                    filtered_image, 
+                    f"Filtro Laplaciano ({kernel_type})"
+                )
+                
+                # Atualiza a imagem atual
+                self.current_image = filtered_image
+                
+                # Exibe a imagem processada
+                self.update_display_image()
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                "Erro",
+                f"Não foi possível aplicar o filtro Laplaciano.\nErro: {str(e)}"
+            ) 

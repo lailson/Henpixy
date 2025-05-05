@@ -5,6 +5,23 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.1.24] - 2024-05-19
+
+### Adicionado
+- Implementação do Filtro Laplaciano no menu Ferramentas
+- Diálogo completo com funcionalidades para visualizar as três apresentações solicitadas:
+  - Resultado do laplaciano sem ajuste (detecção de bordas)
+  - Resultado do laplaciano com ajuste (adicionando 128 para visualização em tons de cinza médio)
+  - Imagem original aguçada com a imagem laplaciana
+- Dois tipos de kernel Laplaciano implementados:
+  - Kernel com diagonais (8-conectividade): máscara 3x3 com centro -8
+  - Kernel sem diagonais (4-conectividade): máscara 3x3 com centro -4
+- Interface de visualização com abas para comparar os diferentes resultados
+- Controle do fator de aguçamento para personalizar o resultado final
+- Descrições detalhadas e informativas sobre o operador Laplaciano e seus efeitos
+- Preservação do canal alpha em imagens com transparência
+- Integração com o sistema de histórico
+
 ## [0.1.23] - 2024-05-19
 
 ### Adicionado

@@ -19,7 +19,7 @@ A aplicação deve ter as seguintes funcionalidades:
 - ✅ Fatiamento por Intensidades para Pseudocores
 - ✅ Filtros de suavização: Média
 - ✅ Filtros de estatísticas de ordem: Máx, Mín e Mediana
-- ⬜ Filtro Laplaciano: utilizando a máscara com centro negativo e que inclui os termos diagonais, faça o que se peder: 
+- ✅ Filtro Laplaciano: utilizando a máscara com centro negativo e que inclui os termos diagonais, faça o que se peder: 
   - (a) apresente o resultado do laplaciano sem ajuste
   - (b) apresente o resultado do laplaciano com ajuste
   - (c) apresente a imagem original aguçada com a imagem laplaciana
