@@ -1,8 +1,8 @@
 from PySide6.QtWidgets import (QMainWindow, QMenuBar, QMenu, 
                               QFileDialog, QMessageBox, QLabel,
                               QWidget, QVBoxLayout, QDialog)
-from PySide6.QtGui import QAction, QPixmap, QImage
-from PySide6.QtCore import Qt
+from PySide6.QtGui import QAction, QPixmap, QImage, QCursor
+from PySide6.QtCore import Qt, QPoint, QRect
 from .about_dialog import AboutDialog
 from PIL import Image
 import numpy as np
@@ -13,6 +13,9 @@ from henpixy.tools.intensity import zero_intensity
 
 # Importar o gerenciador de histórico
 from henpixy.janela.historico import HistoryManager, HistoryDialog
+
+# Importar o diálogo de intensidade de pixels
+from henpixy.janela.intensidade import PixelIntensityDialog
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -39,6 +42,12 @@ class MainWindow(QMainWindow):
         
         # Referência para o diálogo de histórico
         self.history_dialog = None
+        
+        # Referência para o diálogo de intensidade
+        self.intensity_dialog = None
+        
+        # Modo de seleção de pixel
+        self.pixel_selection_mode = False
         
         # Criar a barra de menus
         self.create_menu_bar()
@@ -98,6 +107,12 @@ class MainWindow(QMainWindow):
         history_action.setShortcut("Ctrl+H")
         history_action.triggered.connect(self.show_history)
         window_menu.addAction(history_action)
+        
+        # Ação Intensidade
+        pixel_intensity_action = QAction("Intensidade", self)
+        pixel_intensity_action.setShortcut("Ctrl+I")
+        pixel_intensity_action.triggered.connect(self.show_pixel_intensity)
+        window_menu.addAction(pixel_intensity_action)
         
         # Menu Ajuda
         help_menu = menubar.addMenu("Ajuda")
@@ -400,4 +415,96 @@ class MainWindow(QMainWindow):
     
     def show_about(self):
         dialog = AboutDialog(self)
-        dialog.exec() 
+        dialog.exec()
+    
+    def show_pixel_intensity(self):
+        """Exibe o diálogo de intensidade de pixels"""
+        if self.current_image is None:
+            QMessageBox.warning(
+                self,
+                "Aviso",
+                "Não há imagem para analisar."
+            )
+            return
+        
+        # Verifica se o diálogo já está aberto
+        if self.intensity_dialog is not None and self.intensity_dialog.isVisible():
+            # Traz o diálogo para frente
+            self.intensity_dialog.raise_()
+            self.intensity_dialog.activateWindow()
+            return
+        
+        # Cria um novo diálogo de intensidade
+        self.intensity_dialog = PixelIntensityDialog(self)
+        self.intensity_dialog.set_image(self.current_image)
+        
+        # Exibe o diálogo
+        self.intensity_dialog.show()
+        
+        # Ativa o modo de seleção de pixel
+        self.pixel_selection_mode = True
+        QMessageBox.information(
+            self,
+            "Selecionar Pixel",
+            "Clique em um ponto da imagem para ver a intensidade dos pixels."
+        )
+        
+        # Muda o cursor para indicar o modo de seleção
+        self.setCursor(Qt.CrossCursor)
+        
+        # Conectar o evento de clique na imagem
+        self.image_label.mousePressEvent = self.on_image_click
+    
+    def on_image_click(self, event):
+        """Manipula o clique na imagem para selecionar um pixel"""
+        if not self.pixel_selection_mode or self.intensity_dialog is None:
+            # Chamada ao método padrão se não estiver no modo de seleção
+            QLabel.mousePressEvent(self.image_label, event)
+            return
+        
+        # Obtém as coordenadas do clique relativas à imagem
+        pos = event.pos()
+        pixmap = self.image_label.pixmap()
+        
+        if pixmap:
+            # Calcula as coordenadas reais na imagem
+            image_rect = self.get_image_display_rect()
+            
+            if image_rect.contains(pos):
+                # Converte as coordenadas do clique para coordenadas na imagem original
+                img_x = int((pos.x() - image_rect.left()) * self.current_image.width / image_rect.width())
+                img_y = int((pos.y() - image_rect.top()) * self.current_image.height / image_rect.height())
+                
+                # Define o pixel selecionado no diálogo de intensidade
+                self.intensity_dialog.set_selected_pixel(img_x, img_y)
+                
+                # Desativa o modo de seleção
+                self.pixel_selection_mode = False
+                
+                # Restaura o cursor
+                self.setCursor(Qt.ArrowCursor)
+    
+    def get_image_display_rect(self):
+        """
+        Retorna o retângulo onde a imagem está sendo exibida
+        
+        Returns:
+            QRect: Retângulo da imagem
+        """
+        pixmap = self.image_label.pixmap()
+        if not pixmap:
+            return None
+        
+        # Obtém o tamanho da label
+        label_size = self.image_label.size()
+        
+        # Calcula o tamanho da imagem escalada
+        scaled_size = pixmap.size()
+        scaled_size.scale(label_size, Qt.KeepAspectRatio)
+        
+        # Calcula a posição da imagem dentro da label
+        pos_x = (label_size.width() - scaled_size.width()) / 2
+        pos_y = (label_size.height() - scaled_size.height()) / 2
+        
+        # Retorna o retângulo
+        return QRect(int(pos_x), int(pos_y), scaled_size.width(), scaled_size.height()) 
