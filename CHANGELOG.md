@@ -5,6 +5,17 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.1.8] - 2024-05-15
+
+### Adicionado
+- Nova funcionalidade "Intensidade" no menu Janela
+- Visualização da matriz de intensidade de pixels
+- Interface interativa para seleção de pixels na imagem
+- Botões para aumentar e diminuir o tamanho da matriz de visualização
+- Indicação visual do pixel selecionado na matriz
+- Suporte para visualizar valores RGB em imagens coloridas
+- Exibição colorida de pixels para facilitar a interpretação
+
 ## [0.1.7] - 2024-05-15
 
 ### Alterado
