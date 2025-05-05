@@ -5,6 +5,15 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.1.12] - 2024-05-15
+
+### Adicionado
+- Diretório "samples" para armazenar imagens de amostra para testes
+- Submenu "Abrir modelo" no menu Arquivo
+- Seletor de imagens de amostra com exibição em menu contextual
+- README explicativo para o diretório de amostras
+- Configurações para ignorar imagens de amostra no controle de versão
+
 ## [0.1.11] - 2024-05-15
 
 ### Adicionado
