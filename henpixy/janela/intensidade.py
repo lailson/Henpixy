@@ -4,7 +4,7 @@ Módulo para visualização de intensidade de pixels
 
 from PySide6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout, QLabel,
                               QPushButton, QGridLayout, QSpinBox,
-                              QWidget, QScrollArea)
+                              QWidget, QScrollArea, QFormLayout)
 from PySide6.QtCore import Qt, Signal, QSize
 from PySide6.QtGui import QPixmap, QImage, QColor, QCursor
 import numpy as np
@@ -39,6 +39,10 @@ class PixelIntensityDialog(QDialog):
         self.selected_x = -1
         self.selected_y = -1
         
+        # Dimensões da imagem
+        self.image_width = 0
+        self.image_height = 0
+        
         self.init_ui()
         self.show_instructions()
     
@@ -51,7 +55,37 @@ class PixelIntensityDialog(QDialog):
         self.instruction_label.setAlignment(Qt.AlignCenter)
         layout.addWidget(self.instruction_label)
         
-        # Área de controle
+        # Área de entrada de coordenadas
+        coord_layout = QHBoxLayout()
+        
+        # Formulário para entrada de coordenadas
+        form_layout = QFormLayout()
+        
+        # Campo para coordenada X
+        self.x_coord = QSpinBox()
+        self.x_coord.setMinimum(0)
+        self.x_coord.setMaximum(9999)  # Será ajustado com base no tamanho da imagem
+        self.x_coord.setEnabled(False)
+        form_layout.addRow("X:", self.x_coord)
+        
+        # Campo para coordenada Y
+        self.y_coord = QSpinBox()
+        self.y_coord.setMinimum(0)
+        self.y_coord.setMaximum(9999)  # Será ajustado com base no tamanho da imagem
+        self.y_coord.setEnabled(False)
+        form_layout.addRow("Y:", self.y_coord)
+        
+        coord_layout.addLayout(form_layout)
+        
+        # Botão para aplicar coordenadas
+        self.apply_coord_button = QPushButton("Aplicar")
+        self.apply_coord_button.clicked.connect(self.apply_coordinates)
+        self.apply_coord_button.setEnabled(False)
+        coord_layout.addWidget(self.apply_coord_button)
+        
+        layout.addLayout(coord_layout)
+        
+        # Área de controle do tamanho da matriz
         control_layout = QHBoxLayout()
         
         # Botão para diminuir a matriz
@@ -92,9 +126,18 @@ class PixelIntensityDialog(QDialog):
         close_button.clicked.connect(self.close)
         layout.addWidget(close_button, alignment=Qt.AlignCenter)
     
+    def apply_coordinates(self):
+        """Aplica as coordenadas digitadas pelo usuário"""
+        x = self.x_coord.value()
+        y = self.y_coord.value()
+        
+        # Verifica se as coordenadas são válidas
+        if x >= 0 and x < self.image_width and y >= 0 and y < self.image_height:
+            self.set_selected_pixel(x, y)
+    
     def show_instructions(self):
         """Exibe as instruções para o usuário"""
-        self.instruction_label.setText("Clique em um ponto da imagem para ver a intensidade dos pixels.")
+        self.instruction_label.setText("Clique em um ponto da imagem ou digite as coordenadas para ver a intensidade dos pixels.")
         
         # Limpa a matriz
         self.clear_matrix()
@@ -124,13 +167,24 @@ class PixelIntensityDialog(QDialog):
         # Converte a imagem para array numpy
         self.image_array = np.array(pil_image)
         
-        # Ajusta o tamanho máximo da matriz com base no tamanho da imagem
+        # Armazena as dimensões da imagem
         height, width = self.image_array.shape[:2]
+        self.image_height = height
+        self.image_width = width
+        
+        # Ajusta o tamanho máximo da matriz com base no tamanho da imagem
         self.max_matrix_size = min(15, min(height, width))
         
         # Redefine a posição selecionada
         self.selected_x = -1
         self.selected_y = -1
+        
+        # Configura os campos de coordenadas
+        self.x_coord.setMaximum(width - 1)
+        self.y_coord.setMaximum(height - 1)
+        self.x_coord.setEnabled(True)
+        self.y_coord.setEnabled(True)
+        self.apply_coord_button.setEnabled(True)
         
         # Exibe as instruções
         self.show_instructions()
@@ -147,12 +201,15 @@ class PixelIntensityDialog(QDialog):
             return
         
         # Verifica se as coordenadas são válidas
-        height, width = self.image_array.shape[:2]
-        if x < 0 or x >= width or y < 0 or y >= height:
+        if x < 0 or x >= self.image_width or y < 0 or y >= self.image_height:
             return
         
         self.selected_x = x
         self.selected_y = y
+        
+        # Atualiza os campos de coordenadas
+        self.x_coord.setValue(x)
+        self.y_coord.setValue(y)
         
         # Atualiza a instrução
         self.instruction_label.setText(f"Pixel selecionado: ({x}, {y})")
