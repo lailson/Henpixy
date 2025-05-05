@@ -289,6 +289,9 @@ class HistoryDialog(QDialog):
         self.setWindowTitle("Histórico de Modificações")
         self.setMinimumSize(500, 400)
         
+        # Configura para não ser modal e permitir interação com a janela principal
+        self.setModal(False)
+        
         self.init_ui()
         self.populate_list()
     
@@ -314,7 +317,7 @@ class HistoryDialog(QDialog):
         
         # Botão para fechar
         close_button = QPushButton("Fechar")
-        close_button.clicked.connect(self.reject)
+        close_button.clicked.connect(self.close)  # Apenas fecha a janela
         button_layout.addWidget(close_button)
         
         layout.addLayout(button_layout)
@@ -412,8 +415,10 @@ class HistoryDialog(QDialog):
                 # Restaura o item
                 image = self.history_manager.go_to_item(self.selected_index)
                 if image:
-                    # Fecha o diálogo com sucesso
-                    self.accept()
+                    # Emite o sinal de aceitação sem fechar o diálogo
+                    self.accepted.emit()
+                    # Atualiza a lista para refletir a seleção atual
+                    self.populate_list()
                 else:
                     QMessageBox.critical(
                         self,
@@ -421,5 +426,5 @@ class HistoryDialog(QDialog):
                         "Não foi possível restaurar a imagem."
                     )
         else:
-            # Fecha o diálogo
-            self.reject() 
+            # Não faz nada, apenas continua mostrando o diálogo
+            pass 

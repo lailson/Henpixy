@@ -37,6 +37,9 @@ class MainWindow(QMainWindow):
         # Inicializa o gerenciador de histórico
         self.history_manager = HistoryManager()
         
+        # Referência para o diálogo de histórico
+        self.history_dialog = None
+        
         # Criar a barra de menus
         self.create_menu_bar()
         
@@ -129,11 +132,27 @@ class MainWindow(QMainWindow):
             )
             return
         
-        dialog = HistoryDialog(self.history_manager, self)
-        if dialog.exec() == QDialog.Accepted:
-            # O usuário restaurou uma imagem do histórico
-            self.current_image = self.history_manager.get_current_image()
-            self.update_display_image()
+        # Verifica se o diálogo já está aberto
+        if self.history_dialog is not None and self.history_dialog.isVisible():
+            # Traz o diálogo para frente
+            self.history_dialog.raise_()
+            self.history_dialog.activateWindow()
+            return
+        
+        # Cria um novo diálogo de histórico
+        self.history_dialog = HistoryDialog(self.history_manager, self)
+        
+        # Conecta o sinal de aceitação para processar a restauração da imagem
+        self.history_dialog.accepted.connect(self.on_history_accepted)
+        
+        # Mostra o diálogo de forma não-modal
+        self.history_dialog.show()
+    
+    def on_history_accepted(self):
+        """Chamado quando o diálogo de histórico é aceito"""
+        # O usuário restaurou uma imagem do histórico
+        self.current_image = self.history_manager.get_current_image()
+        self.update_display_image()
     
     def apply_zero_intensity(self):
         """Aplica a ferramenta de intensidade zero na imagem atual"""
