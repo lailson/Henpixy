@@ -5,6 +5,18 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.1.20] - 2024-05-18
+
+### Adicionado
+- Implementação do fatiamento por intensidades para pseudocores no menu Ferramentas > Intensidade
+- Interface com visualização lado a lado da imagem original e com pseudocores
+- Mapas de cores predefinidos (Arco-íris, Temperatura, Densidade, Topográfico, Binário)
+- Criação personalizada de intervalos de intensidade com seleção de cores
+- Transformações RGB personalizadas (HotIron, Espectro, Senoidal, RGB Linear)
+- Funcionalidades para distribuição uniforme de intervalos e geração automática de cores
+- Informações teóricas sobre fatiamento por intensidades e suas aplicações
+- Integração com o sistema de histórico do aplicativo
+
 ## [0.1.19] - 2024-05-17
 
 ### Adicionado

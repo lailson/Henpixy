@@ -10,6 +10,7 @@ from .contrast_stretching_dialog import ContrastStretchingDialog
 from .bit_plane_dialog import BitPlaneDialog
 from .histogram_dialog import HistogramDialog
 from .histogram_window import HistogramWindow
+from .pseudocolor_dialog import PseudocolorDialog
 from PIL import Image
 import numpy as np
 import os
@@ -255,6 +256,11 @@ class MainWindow(QMainWindow):
         histogram_action = QAction("Equalização de Histograma", self)
         histogram_action.triggered.connect(self.apply_histogram_equalization)
         intensity_menu.addAction(histogram_action)
+        
+        # Ação Fatiamento por Intensidades para Pseudocores
+        pseudocolor_action = QAction("Fatiamento por Intensidades para Pseudocores", self)
+        pseudocolor_action.triggered.connect(self.apply_pseudocolor)
+        intensity_menu.addAction(pseudocolor_action)
         
         # Adicionar submenu ao menu Ferramentas
         tools_menu.addMenu(intensity_menu)
@@ -1084,28 +1090,75 @@ class MainWindow(QMainWindow):
             )
 
     def apply_histogram_equalization(self):
-        """Abre o diálogo de equalização de histograma"""
+        """Aplica equalização de histograma na imagem atual"""
         if self.current_image is None:
-            QMessageBox.warning(self, "Aviso", "Abra uma imagem primeiro.")
+            QMessageBox.warning(
+                self,
+                "Aviso",
+                "Não há imagem para processar."
+            )
             return
         
-        # Cria o diálogo de histograma
-        dialog = HistogramDialog(self, self.current_image)
-        
-        # Exibe o diálogo
-        dialog.exec()
-        
-        # Se o diálogo for aceito, atualiza a imagem atual
-        if dialog.result() == QDialog.Accepted and dialog.equalized_image is not None:
-            # Atualiza a imagem atual com a imagem equalizada
-            self.current_image = dialog.equalized_image
+        try:
+            # Cria o diálogo de equalização
+            dialog = HistogramDialog(self, self.current_image)
             
-            # Adiciona ao histórico
-            self.history_manager.add_item(self.current_image, "Equalização de Histograma")
+            # Se o usuário aceitar, aplica a equalização
+            if dialog.exec() == QDialog.Accepted:
+                # Obtém a imagem equalizada
+                equalized_image = dialog.equalized_image
+                
+                if equalized_image:
+                    # Adiciona ao histórico
+                    self.history_manager.add_item(equalized_image, "Equalização de Histograma")
+                    
+                    # Atualiza a imagem atual
+                    self.current_image = equalized_image
+                    
+                    # Exibe a imagem processada
+                    self.update_display_image()
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                "Erro",
+                f"Não foi possível equalizar o histograma.\nErro: {str(e)}"
+            )
+    
+    def apply_pseudocolor(self):
+        """Aplica fatiamento por intensidades para pseudocores na imagem atual"""
+        if self.current_image is None:
+            QMessageBox.warning(
+                self,
+                "Aviso",
+                "Não há imagem para processar."
+            )
+            return
+        
+        try:
+            # Cria o diálogo de pseudocores
+            dialog = PseudocolorDialog(self, self.current_image)
             
-            # Atualiza a exibição
-            self.update_display_image() 
-
+            # Se o usuário aceitar, aplica a transformação
+            if dialog.exec() == QDialog.Accepted:
+                # Obtém a imagem com pseudocores
+                pseudocolor_image = dialog.result_image
+                
+                if pseudocolor_image:
+                    # Adiciona ao histórico
+                    self.history_manager.add_item(pseudocolor_image, "Fatiamento por Intensidades para Pseudocores")
+                    
+                    # Atualiza a imagem atual
+                    self.current_image = pseudocolor_image
+                    
+                    # Exibe a imagem processada
+                    self.update_display_image()
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                "Erro",
+                f"Não foi possível aplicar o fatiamento por intensidades.\nErro: {str(e)}"
+            )
+    
     def show_histogram(self):
         """Exibe a janela de histograma da imagem atual"""
         if self.current_image is None:
