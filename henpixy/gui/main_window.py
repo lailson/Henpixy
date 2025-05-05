@@ -987,11 +987,24 @@ class MainWindow(QMainWindow):
             # Exibe o diálogo (não modal para permitir visualização enquanto aberto)
             dialog.show()
             
+        except ValueError as e:
+            # Erro específico ao calcular valores inválidos
+            QMessageBox.critical(
+                self,
+                "Erro de Validação",
+                f"Não foi possível processar a imagem:\n{str(e)}"
+            )
         except Exception as e:
+            # Mensagem de erro mais detalhada
+            import traceback
+            error_details = traceback.format_exc()
+            
             QMessageBox.critical(
                 self,
                 "Erro",
-                f"Não foi possível abrir o diálogo de fatiamento por planos de bits.\nErro: {str(e)}"
+                f"Não foi possível abrir o diálogo de fatiamento por planos de bits.\n"
+                f"Erro: {str(e)}\n\n"
+                f"Detalhes técnicos (para desenvolvimento):\n{error_details}"
             )
     
     def on_bit_plane_selected(self, plane):
@@ -1017,9 +1030,22 @@ class MainWindow(QMainWindow):
             # Exibe a imagem processada
             self.update_display_image()
             
+        except ValueError as e:
+            # Erro específico de validação
+            QMessageBox.warning(
+                self,
+                "Aviso",
+                f"Não foi possível extrair o plano de bits:\n{str(e)}"
+            )
         except Exception as e:
+            # Erro genérico com mais detalhes
+            import traceback
+            error_details = traceback.format_exc()
+            
             QMessageBox.critical(
                 self,
                 "Erro",
-                f"Não foi possível extrair o plano de bits.\nErro: {str(e)}"
+                f"Não foi possível extrair o plano de bits.\n"
+                f"Erro: {str(e)}\n\n"
+                f"Detalhes técnicos (para desenvolvimento):\n{error_details}"
             ) 

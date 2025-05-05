@@ -26,7 +26,7 @@ class BitPlaneDialog(QDialog):
         self.resize(550, 400)
         
         # Armazena a profundidade de bits e intensidade máxima
-        self.bit_depth = bit_depth
+        self.bit_depth = max(1, bit_depth)  # Garantir pelo menos 1 bit
         self.max_intensity = max_intensity
         
         # Layout principal
@@ -45,11 +45,20 @@ class BitPlaneDialog(QDialog):
         )
         self.info_layout.addWidget(self.bit_depth_label)
         
-        self.info_label = QLabel(
-            f"Uma imagem com {self.bit_depth} bits ({self.max_intensity+1} níveis de intensidade) "
-            f"pode ser decomposta em {self.bit_depth} planos de bits. Cada plano representa "
-            "o estado (0 ou 1) de um bit específico em cada pixel da imagem."
-        )
+        # Texto diferente para imagens com intensidade zero
+        if self.max_intensity == 0:
+            info_text = (
+                "A imagem parece ser completamente preta (intensidade zero). "
+                "Ainda é possível visualizar o plano de bits, mas todos os pixels serão pretos."
+            )
+        else:
+            info_text = (
+                f"Uma imagem com {self.bit_depth} bits ({self.max_intensity+1} níveis de intensidade) "
+                f"pode ser decomposta em {self.bit_depth} planos de bits. Cada plano representa "
+                "o estado (0 ou 1) de um bit específico em cada pixel da imagem."
+            )
+        
+        self.info_label = QLabel(info_text)
         self.info_label.setWordWrap(True)
         self.info_layout.addWidget(self.info_label)
         
@@ -144,17 +153,27 @@ class BitPlaneDialog(QDialog):
     
     def update_image_info(self, bit_depth, max_intensity):
         """Atualiza as informações da imagem e recria os controles de planos de bits"""
-        self.bit_depth = bit_depth
+        self.bit_depth = max(1, bit_depth)  # Garantir pelo menos 1 bit
         self.max_intensity = max_intensity
         
         # Atualiza os rótulos de informação
         self.intensity_label.setText(f"<b>Intensidade máxima detectada:</b> {self.max_intensity}")
         self.bit_depth_label.setText(f"<b>Profundidade de bits (quantidade de planos):</b> {self.bit_depth}")
-        self.info_label.setText(
-            f"Uma imagem com {self.bit_depth} bits ({self.max_intensity+1} níveis de intensidade) "
-            f"pode ser decomposta em {self.bit_depth} planos de bits. Cada plano representa "
-            "o estado (0 ou 1) de um bit específico em cada pixel da imagem."
-        )
+        
+        # Texto diferente para imagens com intensidade zero
+        if self.max_intensity == 0:
+            info_text = (
+                "A imagem parece ser completamente preta (intensidade zero). "
+                "Ainda é possível visualizar o plano de bits, mas todos os pixels serão pretos."
+            )
+        else:
+            info_text = (
+                f"Uma imagem com {self.bit_depth} bits ({self.max_intensity+1} níveis de intensidade) "
+                f"pode ser decomposta em {self.bit_depth} planos de bits. Cada plano representa "
+                "o estado (0 ou 1) de um bit específico em cada pixel da imagem."
+            )
+        
+        self.info_label.setText(info_text)
         
         # Limpa os controles existentes
         for radio in self.plane_radios:

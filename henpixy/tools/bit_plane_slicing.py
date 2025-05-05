@@ -28,9 +28,16 @@ def get_image_bit_depth(image):
     # Encontra o valor máximo de intensidade na imagem
     max_intensity = np.max(image_array)
     
+    # Trata o caso especial de uma imagem completamente preta (intensidade zero)
+    if max_intensity == 0:
+        return 1, 0  # Retorna pelo menos 1 bit de profundidade
+    
     # Calcula a profundidade de bits necessária para representar a intensidade máxima
     # log2(max_intensity + 1) arredondado para cima
     bit_depth = math.ceil(math.log2(max_intensity + 1))
+    
+    # Garantir que sempre tenhamos pelo menos 1 bit de profundidade
+    bit_depth = max(1, bit_depth)
     
     return bit_depth, max_intensity
 
@@ -48,11 +55,16 @@ def extract_bit_plane(image, plane):
         PIL.Image.Image: Uma imagem binária representando o plano de bits escolhido
     """
     # Determina a profundidade de bits da imagem
-    bit_depth, _ = get_image_bit_depth(image)
+    bit_depth, max_intensity = get_image_bit_depth(image)
     
     # Verifica se o plano está no intervalo válido
     if not 0 <= plane < bit_depth:
         raise ValueError(f"O plano de bits deve estar entre 0 e {bit_depth-1}")
+    
+    # Se a intensidade máxima é zero, retornar uma imagem preta
+    if max_intensity == 0:
+        # Retorna uma cópia da imagem (que já é preta)
+        return image.copy() if image.mode == 'L' else image.convert('L')
     
     # Converte para escala de cinza se necessário
     if image.mode != 'L':
