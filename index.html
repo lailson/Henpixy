@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Henpixy - Processamento Digital de Imagens</title>
+    <link rel="icon" href="resources/henpixy.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a88e5;
+            --secondary-color: #6c63ff;
+            --accent-color: #5c52d8;
+            --text-color: #2c3e50;
+            --background-color: #f8f9fa;
+            --card-color: #ffffff;
+            --border-radius: 12px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            line-height: 1.6;
+            padding-bottom: 4rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo {
+            height: 120px;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin: 2rem 0 1rem;
+            font-weight: 600;
+        }
+
+        h3 {
+            color: var(--accent-color);
+            margin: 1.5rem 0 0.75rem;
+            font-weight: 500;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+        }
+
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        a:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            text-decoration: none;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(74, 136, 229, 0.3);
+            margin: 0.5rem;
+        }
+
+        .button:hover {
+            background-color: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(74, 136, 229, 0.4);
+        }
+
+        .button-secondary {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            box-shadow: none;
+        }
+
+        .button-secondary:hover {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 6px 18px rgba(74, 136, 229, 0.3);
+        }
+
+        .card {
+            background-color: var(--card-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        ul, ol {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .feature-item {
+            background-color: var(--card-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .feature-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-item h3 {
+            margin-top: 0;
+            font-size: 1.1rem;
+        }
+
+        .feature-item p {
+            margin-bottom: 0;
+            font-size: 0.95rem;
+        }
+
+        code {
+            background-color: rgba(0, 0, 0, 0.05);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.9em;
+        }
+
+        .code-block {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 1.2rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.9em;
+        }
+
+        .changelog {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 1rem;
+        }
+
+        .version {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .version:last-child {
+            border-bottom: none;
+        }
+
+        .version h3 {
+            margin-top: 0;
+        }
+
+        .version-date {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tag {
+            background-color: rgba(74, 136, 229, 0.1);
+            color: var(--primary-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .icon-grid {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .icon-grid a {
+            color: #666;
+            transition: var(--transition);
+        }
+
+        .icon-grid a:hover {
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .feature-list {
+                grid-template-columns: 1fr;
+            }
+            header {
+                padding: 1.5rem 0;
+            }
+            .logo {
+                height: 80px;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .container {
+                padding: 0 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo-container">
+                <img src="resources/henpixy.png" alt="Henpixy Logo" class="logo">
+            </div>
+            <h1>Henpixy</h1>
+            <p>Um programa para processamento digital de imagens com interface gráfica em Python</p>
+            <div class="action-buttons">
+                <a href="https://github.com/seu-usuario/henpixy" class="button">Ver no GitHub</a>
+                <a href="#download" class="button button-secondary">Download</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="card">
+            <h2>Sobre o Projeto</h2>
+            <p>
+                Henpixy é uma aplicação de processamento digital de imagens desenvolvida em Python com interface gráfica 
+                baseada em PySide6 (Qt6). Projetada para fins educacionais e práticos, a aplicação permite aplicar diversas 
+                técnicas de processamento de imagens, visualizar resultados em tempo real e exportar imagens processadas.
+            </p>
+
+            <div class="tags">
+                <span class="tag">Python</span>
+                <span class="tag">PySide6</span>
+                <span class="tag">Processamento de Imagens</span>
+                <span class="tag">Pillow</span>
+                <span class="tag">NumPy</span>
+                <span class="tag">Matplotlib</span>
+            </div>
+        </section>
+
+        <section>
+            <h2>Funcionalidades</h2>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <h3>Formatos de Imagem</h3>
+                    <p>Suporte para diversos formatos: PNG, JPEG, BMP, GIF, TIFF, WebP, ICO, PSD, XBM, XPM</p>
+                </div>
+
+                <div class="feature-item">
+                    <h3>Interface Intuitiva</h3>
+                    <p>Interface simples com menus e atalhos para fácil navegação e aplicação de ferramentas</p>
+                </div>
+
+                <div class="feature-item">
+                    <h3>Zoom Avançado</h3>
+                    <p>Ferramentas de zoom para inspeção detalhada da imagem com controles intuitivos</p>
+                </div>
+
+                <div class="feature-item">
+                    <h3>Informações da Imagem</h3>
+                    <p>Visualização de detalhes técnicos como dimensões, tipo, espaço de cores e metadados EXIF</p>
+                </div>
+
+                <div class="feature-item">
+                    <h3>Histogramas</h3>
+                    <p>Visualização de histogramas com estatísticas detalhadas e função de distribuição acumulada</p>
+                </div>
+
+                <div class="feature-item">
+                    <h3>Equalização</h3>
+                    <p>Equalização de histograma com visualização comparativa entre imagem original e equalizada</p>
+                </div>
+
+                <div class="feature-item">
+                    <h3>Transformações</h3>
+                    <p>Negativo, transformação gama, alargamento de contraste e outras técnicas de processamento</p>
+                </div>
+
+                <div class="feature-item">
+                    <h3>Planos de Bits</h3>
+                    <p>Fatiamento por planos de bits com visualização individual de cada plano</p>
+                </div>
+
+                <div class="feature-item">
+                    <h3>Inspeção de Pixels</h3>
+                    <p>Visualização da intensidade de pixels individualmente selecionados</p>
+                </div>
+
+                <div class="feature-item">
+                    <h3>Histórico</h3>
+                    <p>Sistema de histórico para acompanhamento e reversão de modificações</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Instalação e Uso</h2>
+
+            <h3>Requisitos</h3>
+            <ul>
+                <li>Python 3.12 ou superior</li>
+                <li>PySide6 (Qt6)</li>
+                <li>Pillow</li>
+                <li>NumPy</li>
+                <li>Matplotlib</li>
+            </ul>
+
+            <h3>Instalação para Desenvolvimento</h3>
+            <p>Clone o repositório e instale as dependências:</p>
+
+            <div class="code-block">
+                <code>
+git clone https://github.com/seu-usuario/henpixy.git<br>
+cd henpixy<br>
+<br>
+# Usando conda para criar um ambiente virtual<br>
+conda create --prefix ./env python=3.12<br>
+conda activate ./env<br>
+<br>
+# Instalando o projeto em modo desenvolvimento<br>
+pip install -e .
+                </code>
+            </div>
+
+            <h3>Executando o Aplicativo</h3>
+            <div class="code-block">
+                <code>python -m henpixy.main</code>
+            </div>
+
+            <h3 id="download">Download</h3>
+            <p>Você pode baixar versões pré-compiladas para Windows e macOS na seção <a href="https://github.com/seu-usuario/henpixy/releases">Releases</a> do GitHub.</p>
+        </section>
+
+        <section>
+            <h2>Módulos e Funcionalidades</h2>
+
+            <h3>Operações Implementadas</h3>
+            <ul>
+                <li>✅ Intensidade zero: atribuição de intensidade zero a todos os pixels</li>
+                <li>✅ Função negativo: implementação da transformação S = L - 1 - r</li>
+                <li>✅ Transformação de potência: ajuste de gama com parâmetros personalizáveis</li>
+                <li>✅ Alargamento de contraste: transformação linear por partes com pontos (r1,s1) e (r2,s2)</li>
+                <li>✅ Fatiamento por planos de bits: visualização individual de cada plano</li>
+                <li>✅ Equalização de histograma: com visualização comparativa</li>
+            </ul>
+
+            <h3>Ferramentas de Visualização</h3>
+            <ul>
+                <li>Histogramas interativos</li>
+                <li>Estatísticas detalhadas da imagem</li>
+                <li>Visualização de intensidade de pixels</li>
+                <li>Comparação antes/depois para cada transformação</li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h2>Changelog Recente</h2>
+            <div class="changelog">
+                <div class="version">
+                    <h3>Versão 0.1.19</h3>
+                    <span class="version-date">17 de maio de 2024</span>
+                    <h4>Adicionado</h4>
+                    <ul>
+                        <li>Implementação da equalização de histograma</li>
+                        <li>Nova janela de visualização de histograma</li>
+                        <li>Visualização de histogramas original e equalizado</li>
+                        <li>Exibição da função de distribuição acumulada (CDF)</li>
+                        <li>Estatísticas detalhadas do histograma</li>
+                    </ul>
+                </div>
+                
+                <div class="version">
+                    <h3>Versão 0.1.18</h3>
+                    <span class="version-date">16 de maio de 2024</span>
+                    <h4>Alterado</h4>
+                    <ul>
+                        <li>Aprimorado o "Fatiamento por Planos de Bits" para detecção automática de profundidade</li>
+                        <li>Melhorada a interface com informações detalhadas sobre cada plano de bits</li>
+                    </ul>
+                </div>
+                
+                <div class="version">
+                    <h3>Versão 0.1.17</h3>
+                    <span class="version-date">16 de maio de 2024</span>
+                    <h4>Adicionado</h4>
+                    <ul>
+                        <li>Nova função "Fatiamento por Planos de Bits" no menu Ferramentas</li>
+                        <li>Implementação da decomposição de imagens em seus 8 planos de bits (0-7)</li>
+                        <li>Diálogo interativo para visualização de planos de bits individuais</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Henpixy &copy; 2024 - Licenciado sob <a href="https://github.com/seu-usuario/henpixy/blob/main/LICENSE">MIT License</a></p>
+            <p>Desenvolvido para fins educacionais como parte de trabalho acadêmico</p>
+            <div class="icon-grid">
+                <a href="https://github.com/seu-usuario/henpixy">GitHub</a>
+                <a href="https://github.com/seu-usuario/henpixy/issues">Reportar Bug</a>
+                <a href="https://github.com/seu-usuario/henpixy/blob/main/CHANGELOG.md">Changelog Completo</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html> 
