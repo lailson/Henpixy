@@ -5,6 +5,16 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.1.11] - 2024-05-15
+
+### Adicionado
+- Novo menu "Exibir" com opções de zoom
+- Função "Mais Zoom" para aumentar o tamanho da imagem (Ctrl++)
+- Função "Menos Zoom" para diminuir o tamanho da imagem (Ctrl+-)
+- Função "Zoom Original" para restaurar o tamanho original (Ctrl+0)
+- Indicação do nível de zoom no título da janela
+- Limites de zoom configuráveis (mínimo 10%, máximo 500%)
+
 ## [0.1.10] - 2024-05-15
 
 ### Adicionado
