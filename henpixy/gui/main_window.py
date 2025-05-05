@@ -975,8 +975,25 @@ class MainWindow(QMainWindow):
             return
         
         try:
-            # Determina a profundidade de bits e intensidade máxima da imagem
-            bit_depth, max_intensity = get_image_bit_depth(self.current_image)
+            # Obtém uma cópia da imagem atual para processamento
+            image_to_process = self.current_image.copy()
+            
+            # Tenta determinar a profundidade de bits e intensidade máxima da imagem
+            try:
+                bit_depth, max_intensity = get_image_bit_depth(image_to_process)
+            except Exception as e:
+                # Se falhar, usa valores padrão seguros
+                import traceback
+                print(f"Erro ao calcular profundidade de bits: {str(e)}")
+                print(traceback.format_exc())
+                bit_depth, max_intensity = 8, 255
+                QMessageBox.warning(
+                    self,
+                    "Aviso",
+                    f"Não foi possível determinar a profundidade de bits da imagem.\n"
+                    f"Usando valores padrão (8 bits, 255 níveis de intensidade).\n"
+                    f"Detalhes do erro: {str(e)}"
+                )
             
             # Cria uma instância do diálogo com as informações da imagem
             dialog = BitPlaneDialog(self, bit_depth, max_intensity)
@@ -998,13 +1015,14 @@ class MainWindow(QMainWindow):
             # Mensagem de erro mais detalhada
             import traceback
             error_details = traceback.format_exc()
+            print(f"Erro no fatiamento por planos de bits: {str(e)}")
+            print(error_details)
             
             QMessageBox.critical(
                 self,
                 "Erro",
                 f"Não foi possível abrir o diálogo de fatiamento por planos de bits.\n"
-                f"Erro: {str(e)}\n\n"
-                f"Detalhes técnicos (para desenvolvimento):\n{error_details}"
+                f"Erro: {str(e)}"
             )
     
     def on_bit_plane_selected(self, plane):
