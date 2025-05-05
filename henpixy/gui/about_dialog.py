@@ -24,7 +24,7 @@ class AboutDialog(QDialog):
         title.setStyleSheet("font-size: 24px; font-weight: bold;")
         title.setAlignment(Qt.AlignCenter)
         
-        version = QLabel("Versão: 0.1.12")
+        version = QLabel("Versão: 0.1.13")
         version.setAlignment(Qt.AlignCenter)
         
         description = QLabel("Software para processamento digital de imagens")

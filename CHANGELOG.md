@@ -5,6 +5,13 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.1.13] - 2024-05-15
+
+### Alterado
+- Modificado o comportamento do menu "Abrir modelo" para exibir um submenu em cascata
+- Adicionado botão "Atualizar lista" no submenu de imagens de amostra
+- Melhorada a experiência do usuário na seleção de imagens de amostra
+
 ## [0.1.12] - 2024-05-15
 
 ### Adicionado

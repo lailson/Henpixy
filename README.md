@@ -101,7 +101,7 @@ brew install create-dmg
 ./create_macos_dmg.sh
 ```
 
-3. O arquivo DMG será gerado em `dist/Henpixy-0.1.12.dmg`.
+3. O arquivo DMG será gerado em `dist/Henpixy-0.1.13.dmg`.
 
 ### Personalização do Ícone
 
