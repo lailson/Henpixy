@@ -17,6 +17,9 @@ from henpixy.janela.historico import HistoryManager, HistoryDialog
 # Importar o diálogo de intensidade de pixels
 from henpixy.janela.intensidade import PixelIntensityDialog
 
+# Importar o diálogo de informações da imagem
+from henpixy.janela.informacoes import ImageInfoDialog
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -45,6 +48,9 @@ class MainWindow(QMainWindow):
         
         # Referência para o diálogo de intensidade
         self.intensity_dialog = None
+        
+        # Referência para o diálogo de informações
+        self.info_dialog = None
         
         # Modo de seleção de pixel
         self.pixel_selection_mode = False
@@ -75,6 +81,15 @@ class MainWindow(QMainWindow):
         save_as_action.setShortcut("Ctrl+Shift+S")
         save_as_action.triggered.connect(self.save_file_as)
         file_menu.addAction(save_as_action)
+        
+        # Separador
+        file_menu.addSeparator()
+        
+        # Ação Informações
+        info_action = QAction("Informações", self)
+        info_action.setShortcut("Ctrl+I")
+        info_action.triggered.connect(self.show_image_info)
+        file_menu.addAction(info_action)
         
         # Separador
         file_menu.addSeparator()
@@ -110,7 +125,7 @@ class MainWindow(QMainWindow):
         
         # Ação Intensidade
         pixel_intensity_action = QAction("Intensidade", self)
-        pixel_intensity_action.setShortcut("Ctrl+I")
+        pixel_intensity_action.setShortcut("Ctrl+P")  # Alterado para Ctrl+P para evitar conflito com Informações
         pixel_intensity_action.triggered.connect(self.show_pixel_intensity)
         window_menu.addAction(pixel_intensity_action)
         
@@ -507,4 +522,30 @@ class MainWindow(QMainWindow):
         pos_y = (label_size.height() - scaled_size.height()) / 2
         
         # Retorna o retângulo
-        return QRect(int(pos_x), int(pos_y), scaled_size.width(), scaled_size.height()) 
+        return QRect(int(pos_x), int(pos_y), scaled_size.width(), scaled_size.height())
+    
+    def show_image_info(self):
+        """Exibe o diálogo de informações da imagem"""
+        if self.current_image is None:
+            QMessageBox.warning(
+                self,
+                "Aviso",
+                "Não há imagem para exibir informações."
+            )
+            return
+        
+        # Verifica se o diálogo já está aberto
+        if self.info_dialog is not None and self.info_dialog.isVisible():
+            # Traz o diálogo para frente
+            self.info_dialog.raise_()
+            self.info_dialog.activateWindow()
+            return
+        
+        # Cria um novo diálogo de informações
+        self.info_dialog = ImageInfoDialog(self)
+        
+        # Define as informações da imagem
+        self.info_dialog.set_image_info(self.current_image_path, self.current_image)
+        
+        # Exibe o diálogo
+        self.info_dialog.show() 
