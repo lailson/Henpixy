@@ -5,6 +5,17 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.1.10] - 2024-05-15
+
+### Adicionado
+- Submenu "Informações" no menu Arquivo
+- Diálogo detalhado com informações técnicas da imagem
+- Exibição de estatísticas da imagem (nome, tipo, dimensões, tamanho em disco)
+- Suporte para visualizar informações do espaço de cores e canais
+- Exibição de metadados EXIF quando disponíveis
+- Informações sobre DPI e resolução da imagem
+- Interface organizada com rolagem para facilitar a visualização
+
 ## [0.1.9] - 2024-05-15
 
 ### Adicionado
