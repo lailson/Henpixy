@@ -8,6 +8,8 @@ from PySide6.QtCore import Qt, QPoint, QRect
 from .about_dialog import AboutDialog
 from .contrast_stretching_dialog import ContrastStretchingDialog
 from .bit_plane_dialog import BitPlaneDialog
+from .histogram_dialog import HistogramDialog
+from .histogram_window import HistogramWindow
 from PIL import Image
 import numpy as np
 import os
@@ -133,6 +135,9 @@ class MainWindow(QMainWindow):
         # Referência para o diálogo de informações
         self.info_dialog = None
         
+        # Referência para a janela de histograma
+        self.histogram_window = None
+        
         # Menu de amostras (inicializado no create_menu_bar)
         self.sample_menu = None
         
@@ -246,6 +251,11 @@ class MainWindow(QMainWindow):
         bit_plane_action.triggered.connect(self.apply_bit_plane_slicing)
         intensity_menu.addAction(bit_plane_action)
         
+        # Ação Equalização de Histograma
+        histogram_action = QAction("Equalização de Histograma", self)
+        histogram_action.triggered.connect(self.apply_histogram_equalization)
+        intensity_menu.addAction(histogram_action)
+        
         # Adicionar submenu ao menu Ferramentas
         tools_menu.addMenu(intensity_menu)
         
@@ -263,6 +273,11 @@ class MainWindow(QMainWindow):
         pixel_intensity_action.setShortcut("Ctrl+P")  # Alterado para Ctrl+P para evitar conflito com Informações
         pixel_intensity_action.triggered.connect(self.show_pixel_intensity)
         window_menu.addAction(pixel_intensity_action)
+        
+        # Ação Histograma
+        histogram_action = QAction("Histograma", self)
+        histogram_action.triggered.connect(self.show_histogram)
+        window_menu.addAction(histogram_action)
         
         # Menu Ajuda
         help_menu = menubar.addMenu("Ajuda")
@@ -1066,4 +1081,50 @@ class MainWindow(QMainWindow):
                 f"Não foi possível extrair o plano de bits.\n"
                 f"Erro: {str(e)}\n\n"
                 f"Detalhes técnicos (para desenvolvimento):\n{error_details}"
-            ) 
+            )
+
+    def apply_histogram_equalization(self):
+        """Abre o diálogo de equalização de histograma"""
+        if self.current_image is None:
+            QMessageBox.warning(self, "Aviso", "Abra uma imagem primeiro.")
+            return
+        
+        # Cria o diálogo de histograma
+        dialog = HistogramDialog(self, self.current_image)
+        
+        # Exibe o diálogo
+        dialog.exec()
+        
+        # Se o diálogo for aceito, atualiza a imagem atual
+        if dialog.result() == QDialog.Accepted and dialog.equalized_image is not None:
+            # Atualiza a imagem atual com a imagem equalizada
+            self.current_image = dialog.equalized_image
+            
+            # Adiciona ao histórico
+            self.history_manager.add_item(self.current_image, "Equalização de Histograma")
+            
+            # Atualiza a exibição
+            self.update_display_image() 
+
+    def show_histogram(self):
+        """Exibe a janela de histograma da imagem atual"""
+        if self.current_image is None:
+            QMessageBox.warning(
+                self,
+                "Aviso",
+                "Não há imagem para analisar."
+            )
+            return
+        
+        # Verifica se a janela já está aberta
+        if self.histogram_window is not None and self.histogram_window.isVisible():
+            # Traz a janela para frente
+            self.histogram_window.raise_()
+            self.histogram_window.activateWindow()
+            return
+        
+        # Cria uma nova janela de histograma
+        self.histogram_window = HistogramWindow(self, self.current_image)
+        
+        # Exibe a janela
+        self.histogram_window.show() 
