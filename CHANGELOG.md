@@ -5,6 +5,14 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.1.9] - 2024-05-15
+
+### Adicionado
+- Campos para entrada manual de coordenadas (x,y) na janela de intensidade de pixels
+- Botão "Aplicar" para visualizar a intensidade do pixel nas coordenadas digitadas
+- Validação de coordenadas para garantir que estejam dentro dos limites da imagem
+- Sincronização entre seleção de pixel por clique e coordenadas digitadas
+
 ## [0.1.8] - 2024-05-15
 
 ### Adicionado
