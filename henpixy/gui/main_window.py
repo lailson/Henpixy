@@ -52,6 +52,9 @@ class MainWindow(QMainWindow):
         # Referência para o diálogo de informações
         self.info_dialog = None
         
+        # Menu de amostras (inicializado no create_menu_bar)
+        self.sample_menu = None
+        
         # Modo de seleção de pixel
         self.pixel_selection_mode = False
         
@@ -75,11 +78,10 @@ class MainWindow(QMainWindow):
         open_action.triggered.connect(self.open_file)
         file_menu.addAction(open_action)
         
-        # Ação Abrir Modelo
-        open_sample_action = QAction("Abrir modelo", self)
-        open_sample_action.setShortcut("Ctrl+M")
-        open_sample_action.triggered.connect(self.open_sample)
-        file_menu.addAction(open_sample_action)
+        # Submenu Abrir Modelo
+        self.sample_menu = QMenu("Abrir modelo", self)
+        self.update_sample_menu()  # Preenche o submenu com as imagens disponíveis
+        file_menu.addMenu(self.sample_menu)
         
         # Ação Salvar
         save_action = QAction("Salvar", self)
@@ -645,18 +647,19 @@ class MainWindow(QMainWindow):
         # Exibe o diálogo
         self.info_dialog.show()
     
-    def open_sample(self):
-        """Abre uma imagem de amostra do diretório de amostras"""
+    def update_sample_menu(self):
+        """Atualiza o submenu de amostras com as imagens disponíveis"""
+        # Limpa o menu atual
+        self.sample_menu.clear()
+        
         # Caminho para o diretório de amostras
         samples_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "samples")
         
         # Verifica se o diretório de amostras existe
         if not os.path.exists(samples_dir):
-            QMessageBox.warning(
-                self,
-                "Aviso",
-                "O diretório de amostras não existe ou não foi encontrado."
-            )
+            action = QAction("Diretório de amostras não encontrado", self)
+            action.setEnabled(False)
+            self.sample_menu.addAction(action)
             return
         
         # Lista os arquivos no diretório de amostras
@@ -666,25 +669,34 @@ class MainWindow(QMainWindow):
                           ['.png', '.jpg', '.jpeg', '.bmp', '.gif', '.tiff', '.tif', '.webp'])]
         
         if not sample_files:
-            QMessageBox.information(
-                self,
-                "Informação",
-                "Não há imagens de amostra disponíveis.\n"
-                "Adicione imagens ao diretório 'henpixy/samples' para usar esta funcionalidade."
-            )
+            action = QAction("Nenhuma imagem disponível", self)
+            action.setEnabled(False)
+            self.sample_menu.addAction(action)
+            
+            # Adiciona uma ação para atualizar o menu
+            self.sample_menu.addSeparator()
+            refresh_action = QAction("Atualizar lista", self)
+            refresh_action.triggered.connect(self.update_sample_menu)
+            self.sample_menu.addAction(refresh_action)
             return
         
-        # Cria um menu de seleção com as imagens disponíveis
-        sample_menu = QMenu(self)
-        
+        # Adiciona as imagens ao menu
         for sample_file in sorted(sample_files):
             action = QAction(sample_file, self)
             action.triggered.connect(lambda checked, file=sample_file: self.load_sample(file))
-            sample_menu.addAction(action)
+            self.sample_menu.addAction(action)
         
-        # Exibe o menu de seleção
-        cursor_pos = QCursor.pos()
-        sample_menu.exec_(cursor_pos)
+        # Adiciona uma ação para atualizar o menu
+        self.sample_menu.addSeparator()
+        refresh_action = QAction("Atualizar lista", self)
+        refresh_action.triggered.connect(self.update_sample_menu)
+        self.sample_menu.addAction(refresh_action)
+    
+    def open_sample(self):
+        """Abre uma imagem de amostra do diretório de amostras - OBSOLETO"""
+        # Este método foi substituído pelo submenu cascata
+        # e está mantido apenas para compatibilidade
+        self.update_sample_menu()
     
     def load_sample(self, sample_file):
         """
