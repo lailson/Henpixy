@@ -8,7 +8,7 @@ from PySide6.QtWidgets import (
     QPushButton, QFrame, QFileDialog, QListWidget,
     QScrollArea, QSizePolicy, QSpacerItem
 )
-from PySide6.QtGui import QPixmap, QFont, QIcon, QDesktopServices
+from PySide6.QtGui import QPixmap, QFont, QIcon, QDesktopServices, QPalette
 from PySide6.QtCore import Qt, QSize, QUrl, Signal
 
 class WelcomeScreen(QWidget):
@@ -28,9 +28,19 @@ class WelcomeScreen(QWidget):
         
         # Configurar a janela
         self.setObjectName("welcomeScreen")
+        
+        # Forçar o fundo branco usando palette
+        palette = self.palette()
+        palette.setColor(QPalette.Window, Qt.white)
+        self.setAutoFillBackground(True)
+        self.setPalette(palette)
+        
         self.setStyleSheet("""
             #welcomeScreen {
-                background-color: #f5f5f5;
+                background-color: white;
+            }
+            QWidget {
+                background-color: white;
             }
             .QPushButton {
                 background-color: #2979ff;
@@ -68,17 +78,20 @@ class WelcomeScreen(QWidget):
                 font-size: 28px;
                 font-weight: bold;
                 margin-bottom: 10px;
+                background-color: white;
             }
             QLabel#subtitleLabel {
                 color: #616161;
                 font-size: 16px;
                 margin-bottom: 20px;
+                background-color: white;
             }
             QFrame#card {
                 background-color: white;
                 border-radius: 8px;
                 padding: 20px;
                 margin: 10px;
+                border: 1px solid #e0e0e0;
             }
             QListWidget {
                 border: 1px solid #e0e0e0;
@@ -89,6 +102,7 @@ class WelcomeScreen(QWidget):
             QListWidget::item {
                 padding: 8px;
                 border-bottom: 1px solid #f0f0f0;
+                color: #424242;
             }
             QListWidget::item:selected {
                 background-color: #e3f2fd;
@@ -96,6 +110,9 @@ class WelcomeScreen(QWidget):
             }
             QListWidget::item:hover {
                 background-color: #f5f5f5;
+            }
+            QHBoxLayout, QVBoxLayout {
+                background-color: white;
             }
         """)
         
@@ -111,6 +128,7 @@ class WelcomeScreen(QWidget):
         logo_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 
                                 "resources", "henpixy.png")
         logo_label = QLabel()
+        logo_label.setStyleSheet("background-color: white;")
         logo_pixmap = QPixmap(logo_path)
         logo_pixmap = logo_pixmap.scaled(150, 150, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         logo_label.setPixmap(logo_pixmap)
@@ -155,6 +173,7 @@ class WelcomeScreen(QWidget):
         open_desc = QLabel("Escolha uma imagem do seu computador para processar. Suportamos diversos formatos incluindo PNG, JPEG, BMP, GIF e TIFF.")
         open_desc.setWordWrap(True)
         open_desc.setAlignment(Qt.AlignCenter)
+        open_desc.setStyleSheet("background-color: white;")
         open_layout.addWidget(open_desc)
         
         open_layout.addStretch()
@@ -181,6 +200,7 @@ class WelcomeScreen(QWidget):
         sample_desc = QLabel("Utilize uma das nossas imagens de amostra para experimentar os recursos do Henpixy.")
         sample_desc.setWordWrap(True)
         sample_desc.setAlignment(Qt.AlignCenter)
+        sample_desc.setStyleSheet("background-color: white;")
         sample_layout.addWidget(sample_desc)
         
         # Lista de amostras
