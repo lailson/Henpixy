@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="henpixy",
-    version="0.1.18",
+    version="0.1.24",
     packages=find_packages(),
     install_requires=[
         "pyside6>=6.6.0",
