@@ -9,11 +9,11 @@
 <h4 align="center">Um aplicativo de processamento digital de imagens desenvolvido em Python com <a href="https://wiki.qt.io/Qt_for_Python" target="_blank">PySide6</a>.</h4>
 
 <p align="center">
-  <a href="https://github.com/lailson/Henpixy/releases/tag/0.1.24">
-    <img src="https://img.shields.io/badge/version-0.1.24-blue.svg"
+  <a href="https://github.com/lailson/Henpixy/releases/tag/0.1.25">
+    <img src="https://img.shields.io/badge/version-0.1.25-blue.svg"
          alt="Versão">
   </a>
-  <a href="https://github.com/lailson/Henpixy/releases/download/0.1.24/Henpixy-0.1.24.dmg">
+  <a href="https://github.com/lailson/Henpixy/releases/download/0.1.25/Henpixy-0.1.25.dmg">
     <img src="https://img.shields.io/badge/macOS-DMG-brightgreen.svg">
   </a>
   <a href="https://github.com/lailson/Henpixy/blob/main/LICENSE">
@@ -88,9 +88,31 @@ $ python -m henpixy.main
 
 ## Download
 
-Você pode [baixar](https://github.com/lailson/Henpixy/releases/tag/0.1.24) a versão mais recente do Henpixy para macOS.
+Você pode [baixar](https://github.com/lailson/Henpixy/releases/tag/0.1.25) a versão mais recente do Henpixy para macOS.
 
-- [Henpixy-0.1.24.dmg](https://github.com/lailson/Henpixy/releases/download/0.1.24/Henpixy-0.1.24.dmg) - Para macOS
+- [Henpixy-0.1.25.dmg](https://github.com/lailson/Henpixy/releases/download/0.1.25/Henpixy-0.1.25.dmg) - Para macOS
+
+### Instruções para macOS
+
+Se ao tentar abrir o aplicativo aparecer a mensagem **"Henpixy.app está danificado e não pode ser aberto"**, siga um dos métodos abaixo:
+
+#### Método 1 (Recomendado):
+1. Clique com o botão direito (ou Control+clique) no aplicativo `Henpixy.app`
+2. Selecione "Abrir" no menu de contexto
+3. Na janela de aviso, clique em "Abrir" novamente
+4. O aplicativo será executado normalmente e nas próximas vezes poderá ser aberto com duplo clique
+
+#### Método 2 (Via Terminal):
+1. Abra o Terminal (em Aplicativos > Utilitários)
+2. Digite o comando abaixo (substitua pelo caminho correto se necessário):
+   ```bash
+   xattr -d com.apple.quarantine /Applications/Henpixy.app
+   ```
+3. Agora o aplicativo deve abrir normalmente
+
+> **Nota**
+> Essas restrições de segurança são impostas pelo macOS para proteger contra software não assinado.
+> O Henpixy é um aplicativo seguro, desenvolvido para fins educacionais.
 
 ## Desenvolvimento
 

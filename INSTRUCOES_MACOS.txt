@@ -1,0 +1,19 @@
+INSTRUÇÕES DE INSTALAÇÃO DO HENPIXY PARA MACOS
+==============================================
+
+Se ao tentar abrir o Henpixy aparecer a mensagem "Henpixy.app está danificado e não pode ser aberto", siga um dos métodos abaixo:
+
+MÉTODO 1 (Mais simples):
+1. Clique com o botão direito do mouse (ou Control+clique) no aplicativo Henpixy.app
+2. Selecione "Abrir" no menu de contexto
+3. Na janela de aviso que aparecer, clique em "Abrir" novamente
+4. O aplicativo será executado normalmente e nas próximas vezes poderá ser aberto com duplo clique
+
+MÉTODO 2 (Via Terminal):
+1. Abra o Terminal (em Aplicativos > Utilitários)
+2. Digite o comando abaixo, substituindo o caminho pelo local onde você colocou o aplicativo:
+   xattr -d com.apple.quarantine /Applications/Henpixy.app
+3. Pressione Enter para executar o comando
+4. Agora o aplicativo deve abrir normalmente
+
+Para mais informações, visite: https://henpixy.lailsonhenrique.com 

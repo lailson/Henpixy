@@ -5,6 +5,18 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.1.25]
+
+### Adicionado
+- Instruções detalhadas no arquivo DMG para resolver o problema "aplicativo danificado" no macOS
+- Arquivo README_INSTALACAO.txt incluído no instalador com métodos para contornar as restrições de segurança
+- Layout melhorado do DMG para incluir o novo arquivo de instruções
+- Documentação atualizada sobre o procedimento de instalação no macOS
+
+### Corrigido
+- Problema relacionado à mensagem "Henpixy.app está danificado e não pode ser aberto" no macOS
+- Instruções claras para usuários sobre como lidar com restrições de segurança do macOS
+
 ## [0.1.24]
 
 ### Adicionado
