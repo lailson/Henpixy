@@ -1,123 +1,137 @@
-# Henpixy
+<h1 align="center">
+  <br>
+  <a href="https://henpixy.lailsonhenrique.com/"><img src="resources/henpixy.png" alt="Henpixy" width="200"></a>
+  <br>
+  Henpixy
+  <br>
+</h1>
 
-Um programa para processamento digital de imagens com interface gráfica em Python.
+<h4 align="center">Um aplicativo de processamento digital de imagens desenvolvido em Python com <a href="https://wiki.qt.io/Qt_for_Python" target="_blank">PySide6</a>.</h4>
 
-## Checklist de Desenvolvimento
+<p align="center">
+  <a href="https://github.com/lailson/Henpixy/releases/tag/0.1.24">
+    <img src="https://img.shields.io/badge/version-0.1.24-blue.svg"
+         alt="Versão">
+  </a>
+  <a href="https://github.com/lailson/Henpixy/releases/download/0.1.24/Henpixy-0.1.24.dmg">
+    <img src="https://img.shields.io/badge/macOS-DMG-brightgreen.svg">
+  </a>
+  <a href="https://github.com/lailson/Henpixy/blob/main/LICENSE">
+      <img src="https://img.shields.io/badge/License-MIT-yellow.svg">
+  </a>
+  <a href="https://www.python.org/">
+    <img src="https://img.shields.io/badge/python-3.12-orange.svg">
+  </a>
+</p>
 
-A aplicação deve ter as seguintes funcionalidades:
+<p align="center">
+  <a href="#principais-funcionalidades">Principais Funcionalidades</a> •
+  <a href="#como-usar">Como Usar</a> •
+  <a href="#download">Download</a> •
+  <a href="#desenvolvimento">Desenvolvimento</a> •
+  <a href="#tecnologias">Tecnologias</a> •
+  <a href="#licença">Licença</a>
+</p>
 
-- ✅ Interface gráfica 
-- ✅ Carregar imagem 
-- ✅ Salvar imagem 
-- ✅ Intensidade zero: função para atribuir intensidade zero a todos os pixels da imagem 
-- ✅ Retornar para a imagem original 
-- ✅ Função negativo: implementação da transformação S = L - 1 - r
-- ✅ Transformação de potência: possibilitando ao usuário definir o valor de gama e utilizar o valor de c = 1
-- ✅ Alargamento de contraste: possibilitando ao usuário definir os valores de (r1, s1) e (r2, s2)
-- ✅ Fatiamento por Planos de Bits: possibilitando ao usuário selecionar o plano de bits desejado para a visualização
-- ✅ Equalização de histograma: o programa deve exibir a imagem equalizada, o histograma da imagem original e o histograma da imagem equalizada para fins de comparação
-- ✅ Fatiamento por Intensidades para Pseudocores
-- ✅ Filtros de suavização: Média
-- ✅ Filtros de estatísticas de ordem: Máx, Mín e Mediana
-- ✅ Filtro Laplaciano: utilizando a máscara com centro negativo e que inclui os termos diagonais, faça o que se peder: 
-  - (a) apresente o resultado do laplaciano sem ajuste
-  - (b) apresente o resultado do laplaciano com ajuste
-  - (c) apresente a imagem original aguçada com a imagem laplaciana
+![screenshot](resources/henpixy_screenshot.png)
 
-## Funcionalidades
+## Principais Funcionalidades
 
-- Visualização de imagens em diversos formatos (PNG, JPEG, BMP, GIF, TIFF, WebP, etc.)
-- Salvar imagens em diferentes formatos
-- Interface simples e intuitiva com menus e atalhos
-- Zoom para melhor visualização dos detalhes da imagem
-- Visualização de informações detalhadas da imagem (tamanho, tipo, dimensões, espaço de cores)
-- Visualização da intensidade de pixels selecionados
-- Histórico de modificações com possibilidade de retornar a estados anteriores
-- Análise e equalização de histogramas:
-  - Visualização de histogramas em tempo real
-  - Comparação entre imagem original e equalizada
-  - Estatísticas detalhadas do histograma (mínimo, máximo, média, desvio padrão)
-  - Visualização da função de distribuição acumulada (CDF)
-  - Janela dedicada para análise de histograma
+* Interface Moderna e Intuitiva
+  - Tela de boas-vindas com acesso rápido às funcionalidades
+  - Menu organizado para fácil navegação entre ferramentas
+* Suporte a Diversos Formatos de Imagem
+  - PNG, JPEG, BMP, GIF, TIFF, WebP, ICO, PSD, XBM, XPM
+* Operações de Processamento de Imagem
+  - Transformações básicas: negativo, gama, alargamento de contraste
+  - Filtros espaciais: média, mediana, mínimo, máximo, Laplaciano
+  - Fatiamento por planos de bits com visualização detalhada
+  - Pseudocores com mapas predefinidos e personalizáveis
+* Análise de Imagem
+  - Visualização de histogramas com estatísticas detalhadas
+  - Equalização de histograma com comparação antes/depois
+  - Inspeção de pixels com matriz interativa
+  - Exibição de metadados EXIF
+* Sistema de Histórico
+  - Navegação completa entre estados da imagem
+  - Reversão das operações aplicadas
+* Ferramentas de Visualização
+  - Zoom avançado com atalhos de teclado
+  - Comparação de imagens lado a lado
+* Tema claro moderno e consistente
+  - Visual agradável em todos os sistemas operacionais
 
-## Requisitos para Desenvolvimento
+## Como Usar
 
-- Python 3.12 ou superior
-- PySide6 (Qt6)
-- Pillow
-- Numpy
-- Scikit-image
-- Matplotlib
-
-## Instalação para Desenvolvimento
-
-1. Clone o repositório:
-```bash
-git clone https://github.com/seu-usuario/henpixy.git
-cd henpixy
-```
-
-2. Crie e ative um ambiente virtual (usando conda):
-```bash
-conda create --prefix ./env python=3.12
-conda activate ./env
-```
-
-3. Instale as dependências:
-```bash
-pip install -e .
-```
-
-4. Execute o programa:
-```bash
-python -m henpixy.main
-```
-
-## Gerando Executáveis
-
-### Requisitos
-- PyInstaller
-
-### Instruções
-
-Para gerar um executável para sua plataforma atual (Windows ou macOS), execute:
+Para clonar e executar este aplicativo, você precisará de [Git](https://git-scm.com), [Python 3.12](https://www.python.org/) e opcionalmente [Conda](https://conda.io/). Da sua linha de comando:
 
 ```bash
-python build.py
+# Clone este repositório
+$ git clone https://github.com/lailson/Henpixy.git
+
+# Entre no repositório
+$ cd Henpixy
+
+# Crie um ambiente virtual (opcional, mas recomendado)
+$ conda create --prefix ./env python=3.12
+$ conda activate ./env
+
+# Instale as dependências
+$ pip install -e .
+
+# Execute o aplicativo
+$ python -m henpixy.main
 ```
 
-O executável será gerado na pasta `dist/`.
+> **Nota**
+> O aplicativo foi testado principalmente no macOS, mas deve funcionar em qualquer plataforma que suporte Python e Qt.
 
-### Executáveis por Plataforma
+## Download
 
-#### Windows
-O executável gerado para Windows é o arquivo `Henpixy.exe` na pasta `dist/`.
+Você pode [baixar](https://github.com/lailson/Henpixy/releases/tag/0.1.24) a versão mais recente do Henpixy para macOS.
 
-#### macOS
-O executável gerado para macOS é o arquivo `Henpixy` na pasta `dist/`.
+- [Henpixy-0.1.24.dmg](https://github.com/lailson/Henpixy/releases/download/0.1.24/Henpixy-0.1.24.dmg) - Para macOS
 
-Para criar um pacote instalador DMG no macOS:
+## Desenvolvimento
 
-1. Instale o `create-dmg`:
-```bash
-brew install create-dmg
-```
+### Operações Implementadas
 
-2. Execute o script de criação do DMG:
-```bash
-./create_macos_dmg.sh
-```
+- ✅ Filtro de Intensidade zero
+- ✅ Função negativo (transformação S = L - 1 - r)
+- ✅ Transformação gama (potência) ajustável
+- ✅ Alargamento de contraste com pontos configuráveis
+- ✅ Fatiamento por planos de bits
+- ✅ Equalização de histograma
+- ✅ Pseudocores por fatiamento de intensidades
+- ✅ Filtro de suavização da média
+- ✅ Filtros estatísticos (média, mediana, mínimo, máximo)
+- ✅ Filtro Laplaciano e aguçamento de imagens
 
-3. O arquivo DMG será gerado em `dist/Henpixy-0.1.15.dmg`.
+### Ferramentas de Visualização
 
-### Personalização do Ícone
+- ✅ Histogramas interativos
+- ✅ Estatísticas detalhadas da imagem
+- ✅ Visualização de intensidade de pixels
+- ✅ Comparação antes/depois para transformações
+- ✅ Navegação por histórico de alterações
+- ✅ Visualização de metadados EXIF quando disponíveis
 
-- Para Windows: Adicione um arquivo `icon.ico` na pasta `resources/`
-- Para macOS: Adicione um arquivo `icon.icns` na pasta `resources/`
+## Tecnologias
 
-Para personalizar a aparência do DMG no macOS:
-- Adicione uma imagem de fundo em `resources/dmg_background.png` (800x400 pixels recomendado)
+Este software utiliza os seguintes pacotes de código aberto:
+
+- [Python](https://www.python.org/) - Linguagem de programação
+- [PySide6 (Qt6)](https://wiki.qt.io/Qt_for_Python) - Framework para interface gráfica
+- [Pillow (PIL Fork)](https://python-pillow.org/) - Biblioteca de processamento de imagens
+- [NumPy](https://numpy.org/) - Computação numérica eficiente
+- [Matplotlib](https://matplotlib.org/) - Visualização de dados e histogramas
 
 ## Licença
 
-[MIT](LICENSE)
+MIT
+
+---
+
+> [Site do Projeto](https://henpixy.lailsonhenrique.com/) &nbsp;&middot;&nbsp;
+> GitHub [@lailson](https://github.com/lailson) &nbsp;&middot;&nbsp;
+> Desenvolvido para fins educacionais como parte de trabalho acadêmico
