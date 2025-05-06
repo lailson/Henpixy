@@ -2,7 +2,7 @@ from PySide6.QtWidgets import (QMainWindow, QMenuBar, QMenu,
                               QFileDialog, QMessageBox, QLabel,
                               QWidget, QVBoxLayout, QDialog,
                               QInputDialog, QDoubleSpinBox, QHBoxLayout,
-                              QPushButton, QFormLayout)
+                              QPushButton, QFormLayout, QStackedWidget)
 from PySide6.QtGui import QAction, QPixmap, QImage, QCursor
 from PySide6.QtCore import Qt, QPoint, QRect
 from .about_dialog import AboutDialog
@@ -14,6 +14,7 @@ from .pseudocolor_dialog import PseudocolorDialog
 from .mean_filter_dialog import MeanFilterDialog
 from .order_statistics_dialog import OrderStatisticsDialog
 from .laplacian_dialog import LaplacianDialog
+from .welcome_screen import WelcomeScreen
 from PIL import Image
 import numpy as np
 import os
@@ -112,17 +113,34 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Henpixy")
-        self.setMinimumSize(800, 600)
+        self.setMinimumSize(1000, 700)
         
         # Widget central e layout
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
         self.layout = QVBoxLayout(self.central_widget)
+        self.layout.setContentsMargins(0, 0, 0, 0)
+        
+        # Stacked widget para alternar entre tela de boas-vindas e de edição
+        self.stacked_widget = QStackedWidget()
+        self.layout.addWidget(self.stacked_widget)
+        
+        # Tela de boas-vindas
+        self.welcome_screen = WelcomeScreen()
+        self.welcome_screen.open_image_requested.connect(self.open_image_file)
+        self.welcome_screen.open_sample_requested.connect(self.load_sample)
+        self.stacked_widget.addWidget(self.welcome_screen)
+        
+        # Widget de edição
+        self.edit_widget = QWidget()
+        self.edit_layout = QVBoxLayout(self.edit_widget)
         
         # Label para exibir a imagem
         self.image_label = QLabel()
         self.image_label.setAlignment(Qt.AlignCenter)
-        self.layout.addWidget(self.image_label)
+        self.edit_layout.addWidget(self.image_label)
+        
+        self.stacked_widget.addWidget(self.edit_widget)
         
         # Armazenar o caminho da imagem atual
         self.current_image_path = None
@@ -156,6 +174,9 @@ class MainWindow(QMainWindow):
         
         # Criar a barra de menus
         self.create_menu_bar()
+        
+        # Exibir a tela de boas-vindas inicialmente
+        self.stacked_widget.setCurrentIndex(0)
         
     def create_menu_bar(self):
         menubar = self.menuBar()
@@ -355,6 +376,9 @@ class MainWindow(QMainWindow):
         # O usuário restaurou uma imagem do histórico
         self.current_image = self.history_manager.get_current_image()
         self.update_display_image()
+        
+        # Alternar para a tela de edição
+        self.stacked_widget.setCurrentIndex(1)
     
     def apply_zero_intensity(self):
         """Aplica a ferramenta de intensidade zero na imagem atual"""
@@ -470,6 +494,10 @@ class MainWindow(QMainWindow):
             )
         
         self.image_label.setPixmap(scaled_pixmap)
+        
+        # Alterna para a tela de edição se estiver na tela de boas-vindas
+        if self.stacked_widget.currentIndex() == 0:
+            self.stacked_widget.setCurrentIndex(1)
     
     def zoom_in(self):
         """Aumenta o zoom da imagem"""
@@ -541,33 +569,40 @@ class MainWindow(QMainWindow):
         )
         
         if file_name:
-            try:
-                # Abrir a imagem usando Pillow
-                image = Image.open(file_name)
-                
-                # Guardar a imagem original e o caminho
-                self.current_image = image
-                self.current_image_path = file_name
-                
-                # Adicionar ao histórico
-                self.history_manager.clear()  # Limpa o histórico anterior
-                self.history_manager.add_item(image, f"Original: {os.path.basename(file_name)}")
-                
-                # Redefine o zoom ao abrir uma nova imagem
-                self.zoom_factor = 1.0
-                
-                # Atualizar o título da janela
-                self.update_window_title()
-                
-                # Exibir a imagem
-                self.update_display_image()
-                
-            except Exception as e:
-                QMessageBox.critical(
-                    self,
-                    "Erro",
-                    f"Não foi possível abrir a imagem.\nErro: {str(e)}"
-                )
+            self.open_image_file(file_name)
+    
+    def open_image_file(self, file_name):
+        """Abre uma imagem a partir de um caminho de arquivo."""
+        try:
+            # Abrir a imagem usando Pillow
+            image = Image.open(file_name)
+            
+            # Guardar a imagem original e o caminho
+            self.current_image = image
+            self.current_image_path = file_name
+            
+            # Adicionar ao histórico
+            self.history_manager.clear()  # Limpa o histórico anterior
+            self.history_manager.add_item(image, f"Original: {os.path.basename(file_name)}")
+            
+            # Redefine o zoom ao abrir uma nova imagem
+            self.zoom_factor = 1.0
+            
+            # Atualizar o título da janela
+            self.update_window_title()
+            
+            # Exibir a imagem
+            self.update_display_image()
+            
+            # Alternar para a tela de edição
+            self.stacked_widget.setCurrentIndex(1)
+            
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                "Erro",
+                f"Não foi possível abrir a imagem.\nErro: {str(e)}"
+            )
     
     def save_file(self):
         """Salva a imagem atual no mesmo local onde foi aberta"""
