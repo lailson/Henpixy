@@ -108,7 +108,7 @@ class WelcomeScreen(QWidget):
         header_layout = QHBoxLayout()
         
         # Logo
-        logo_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 
+        logo_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 
                                 "resources", "henpixy.png")
         logo_label = QLabel()
         logo_pixmap = QPixmap(logo_path)
@@ -221,7 +221,7 @@ class WelcomeScreen(QWidget):
     
     def load_sample_list(self):
         """Carrega a lista de imagens de amostra disponíveis."""
-        samples_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "samples")
+        samples_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "samples")
         
         # Verifica se o diretório de amostras existe
         if not os.path.exists(samples_dir):
