@@ -33,7 +33,7 @@
   <a href="#licença">Licença</a>
 </p>
 
-![screenshot](resources/henpixy_screenshot.png)
+![screenshot](henpixy/resources/tela_inicial.png)
 
 ## Principais Funcionalidades
 
