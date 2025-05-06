@@ -55,11 +55,28 @@
             justify-content: center;
             align-items: center;
             margin-bottom: 1.5rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            width: 160px;
+            height: 160px;
+            border-radius: 28px;
+            margin: 0 auto 1.5rem;
+            padding: 10px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .logo-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
         }
 
         .logo {
             height: 120px;
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+            border-radius: 20px;
         }
 
         h1 {
@@ -127,6 +144,17 @@
             background-color: var(--primary-color);
             color: white;
             box-shadow: 0 6px 18px rgba(74, 136, 229, 0.3);
+        }
+
+        .button-download {
+            background-color: #28a745;
+            color: white;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+        
+        .button-download:hover {
+            background-color: #218838;
+            box-shadow: 0 6px 18px rgba(40, 167, 69, 0.4);
         }
 
         .card {
@@ -206,6 +234,9 @@
             max-height: 400px;
             overflow-y: auto;
             padding-right: 1rem;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 1rem;
         }
 
         .version {
@@ -222,11 +253,10 @@
             margin-top: 0;
         }
 
-        .version-date {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 1rem;
-            display: block;
+        .version h4 {
+            margin: 1rem 0 0.5rem;
+            color: #555;
+            font-weight: 600;
         }
 
         .tags {
@@ -251,6 +281,8 @@
             padding: 2rem 0;
             font-size: 0.9rem;
             color: #666;
+            background-color: #f0f2f5;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .icon-grid {
@@ -269,6 +301,63 @@
             color: var(--primary-color);
         }
 
+        .download-options {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .download-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+            width: 250px;
+        }
+
+        .download-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .os-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background-color: #f8f9fa;
+            border-radius: 20px;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .screenshots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .screenshot-item {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .screenshot-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .screenshot-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
         @media (max-width: 768px) {
             .feature-list {
                 grid-template-columns: 1fr;
@@ -285,6 +374,13 @@
             .container {
                 padding: 0 1.5rem;
             }
+            .download-options {
+                flex-direction: column;
+                align-items: center;
+            }
+            .download-card {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -297,8 +393,9 @@
             <h1>Henpixy</h1>
             <p>Um programa para processamento digital de imagens com interface gráfica em Python</p>
             <div class="action-buttons">
-                <a href="https://github.com/seu-usuario/henpixy" class="button">Ver no GitHub</a>
-                <a href="#download" class="button button-secondary">Download</a>
+                <a href="https://github.com/lailson/Henpixy" class="button">Ver no GitHub</a>
+                <a href="https://github.com/lailson/Henpixy/releases/download/0.1.24/Henpixy-0.1.24.dmg" class="button button-download">Download para macOS</a>
+                <a href="https://github.com/lailson/Henpixy/releases/tag/0.1.24" class="button button-secondary">Todas as Versões</a>
             </div>
         </div>
     </header>
@@ -310,6 +407,10 @@
                 Henpixy é uma aplicação de processamento digital de imagens desenvolvida em Python com interface gráfica 
                 baseada em PySide6 (Qt6). Projetada para fins educacionais e práticos, a aplicação permite aplicar diversas 
                 técnicas de processamento de imagens, visualizar resultados em tempo real e exportar imagens processadas.
+            </p>
+            <p>
+                Com uma tela de boas-vindas intuitiva, opções para imagens de amostra e uma interface limpa e moderna, 
+                Henpixy torna o processamento de imagens acessível tanto para estudantes quanto para profissionais.
             </p>
 
             <div class="tags">
@@ -333,7 +434,7 @@
 
                 <div class="feature-item">
                     <h3>Interface Intuitiva</h3>
-                    <p>Interface simples com menus e atalhos para fácil navegação e aplicação de ferramentas</p>
+                    <p>Interface moderna com tela de boas-vindas, menus organizados e atalhos de teclado</p>
                 </div>
 
                 <div class="feature-item">
@@ -357,46 +458,76 @@
                 </div>
 
                 <div class="feature-item">
-                    <h3>Transformações</h3>
-                    <p>Negativo, transformação gama, alargamento de contraste e outras técnicas de processamento</p>
+                    <h3>Transformações Básicas</h3>
+                    <p>Negativo, transformação gama, alargamento de contraste e filtro de intensidade zero</p>
                 </div>
 
                 <div class="feature-item">
                     <h3>Planos de Bits</h3>
-                    <p>Fatiamento por planos de bits com visualização individual de cada plano</p>
+                    <p>Fatiamento por planos de bits com visualização individual de cada plano e detecção automática de profundidade</p>
+                </div>
+
+                <div class="feature-item">
+                    <h3>Pseudocores</h3>
+                    <p>Fatiamento por intensidades para pseudocores com mapas predefinidos e personalização</p>
+                </div>
+
+                <div class="feature-item">
+                    <h3>Filtros Espaciais</h3>
+                    <p>Filtros da média, ordem estatística (mediana, mínimo, máximo) e Laplaciano</p>
+                </div>
+
+                <div class="feature-item">
+                    <h3>Aguçamento de Imagens</h3>
+                    <p>Aguçamento de imagens utilizando o operador Laplaciano com controle de intensidade</p>
                 </div>
 
                 <div class="feature-item">
                     <h3>Inspeção de Pixels</h3>
-                    <p>Visualização da intensidade de pixels individualmente selecionados</p>
+                    <p>Visualização da intensidade de pixels individualmente selecionados com matriz interativa</p>
                 </div>
 
                 <div class="feature-item">
                     <h3>Histórico</h3>
                     <p>Sistema de histórico para acompanhamento e reversão de modificações</p>
                 </div>
+
+                <div class="feature-item">
+                    <h3>Imagens de Amostra</h3>
+                    <p>Acesso rápido a imagens de amostra para testar as funcionalidades do aplicativo</p>
+                </div>
             </div>
         </section>
 
         <section class="card">
-            <h2>Instalação e Uso</h2>
+            <h2 id="download">Download</h2>
+            <p>Escolha a versão do Henpixy compatível com seu sistema operacional:</p>
 
-            <h3>Requisitos</h3>
-            <ul>
-                <li>Python 3.12 ou superior</li>
-                <li>PySide6 (Qt6)</li>
-                <li>Pillow</li>
-                <li>NumPy</li>
-                <li>Matplotlib</li>
-            </ul>
+            <div class="download-options">
+                <div class="download-card">
+                    <div class="download-icon">🍎</div>
+                    <div class="os-badge">macOS</div>
+                    <h3>Henpixy para macOS</h3>
+                    <p>Versão 0.1.24 - Arquivo DMG</p>
+                    <a href="https://github.com/lailson/Henpixy/releases/download/0.1.24/Henpixy-0.1.24.dmg" class="button button-download">Download</a>
+                </div>
+
+                <div class="download-card">
+                    <div class="download-icon">📦</div>
+                    <div class="os-badge">Todas as plataformas</div>
+                    <h3>Código-fonte</h3>
+                    <p>Para desenvolvedores</p>
+                    <a href="https://github.com/lailson/Henpixy/releases/tag/0.1.24" class="button">Ver Releases</a>
+                </div>
+            </div>
 
             <h3>Instalação para Desenvolvimento</h3>
             <p>Clone o repositório e instale as dependências:</p>
 
             <div class="code-block">
                 <code>
-git clone https://github.com/seu-usuario/henpixy.git<br>
-cd henpixy<br>
+git clone https://github.com/lailson/Henpixy.git<br>
+cd Henpixy<br>
 <br>
 # Usando conda para criar um ambiente virtual<br>
 conda create --prefix ./env python=3.12<br>
@@ -411,30 +542,33 @@ pip install -e .
             <div class="code-block">
                 <code>python -m henpixy.main</code>
             </div>
-
-            <h3 id="download">Download</h3>
-            <p>Você pode baixar versões pré-compiladas para Windows e macOS na seção <a href="https://github.com/seu-usuario/henpixy/releases">Releases</a> do GitHub.</p>
         </section>
 
         <section>
-            <h2>Módulos e Funcionalidades</h2>
+            <h2>Recursos Implementados</h2>
 
-            <h3>Operações Implementadas</h3>
+            <h3>Operações de Processamento</h3>
             <ul>
-                <li>✅ Intensidade zero: atribuição de intensidade zero a todos os pixels</li>
-                <li>✅ Função negativo: implementação da transformação S = L - 1 - r</li>
-                <li>✅ Transformação de potência: ajuste de gama com parâmetros personalizáveis</li>
-                <li>✅ Alargamento de contraste: transformação linear por partes com pontos (r1,s1) e (r2,s2)</li>
-                <li>✅ Fatiamento por planos de bits: visualização individual de cada plano</li>
-                <li>✅ Equalização de histograma: com visualização comparativa</li>
+                <li>✅ Filtro de Intensidade zero</li>
+                <li>✅ Função negativo (transformação S = L - 1 - r)</li>
+                <li>✅ Transformação gama (potência) ajustável</li>
+                <li>✅ Alargamento de contraste com pontos configuráveis</li>
+                <li>✅ Fatiamento por planos de bits</li>
+                <li>✅ Equalização de histograma</li>
+                <li>✅ Pseudocores por fatiamento de intensidades</li>
+                <li>✅ Filtro de suavização da média</li>
+                <li>✅ Filtros estatísticos (média, mediana, mínimo, máximo)</li>
+                <li>✅ Filtro Laplaciano e aguçamento de imagens</li>
             </ul>
 
             <h3>Ferramentas de Visualização</h3>
             <ul>
-                <li>Histogramas interativos</li>
-                <li>Estatísticas detalhadas da imagem</li>
-                <li>Visualização de intensidade de pixels</li>
-                <li>Comparação antes/depois para cada transformação</li>
+                <li>✅ Histogramas interativos</li>
+                <li>✅ Estatísticas detalhadas da imagem</li>
+                <li>✅ Visualização de intensidade de pixels</li>
+                <li>✅ Comparação antes/depois para transformações</li>
+                <li>✅ Navegação por histórico de alterações</li>
+                <li>✅ Visualização de metadados EXIF quando disponíveis</li>
             </ul>
         </section>
 
@@ -442,36 +576,68 @@ pip install -e .
             <h2>Changelog Recente</h2>
             <div class="changelog">
                 <div class="version">
-                    <h3>Versão 0.1.19</h3>
-                    <span class="version-date">17 de maio de 2024</span>
+                    <h3>Versão 0.1.24</h3>
                     <h4>Adicionado</h4>
                     <ul>
-                        <li>Implementação da equalização de histograma</li>
-                        <li>Nova janela de visualização de histograma</li>
-                        <li>Visualização de histogramas original e equalizado</li>
-                        <li>Exibição da função de distribuição acumulada (CDF)</li>
-                        <li>Estatísticas detalhadas do histograma</li>
+                        <li>Implementação do Filtro Laplaciano no menu Ferramentas</li>
+                        <li>Diálogo para visualizar três apresentações do filtro:
+                            <ul>
+                                <li>Resultado do laplaciano sem ajuste (detecção de bordas)</li>
+                                <li>Resultado do laplaciano com ajuste (tons de cinza médio)</li>
+                                <li>Imagem original aguçada com a imagem laplaciana</li>
+                            </ul>
+                        </li>
+                        <li>Dois tipos de kernel Laplaciano implementados (8-conectividade e 4-conectividade)</li>
+                        <li>Interface com abas para comparar os diferentes resultados</li>
+                        <li>Controle do fator de aguçamento personalizável</li>
                     </ul>
                 </div>
                 
                 <div class="version">
-                    <h3>Versão 0.1.18</h3>
-                    <span class="version-date">16 de maio de 2024</span>
+                    <h3>Versão 0.1.23</h3>
+                    <h4>Adicionado</h4>
+                    <ul>
+                        <li>Implementação dos filtros de estatísticas de ordem (Máximo, Mínimo e Mediana)</li>
+                        <li>Diálogo para seleção do tipo de filtro e tamanho do kernel</li>
+                        <li>Implementação eficiente de algoritmos para filtros de ordem</li>
+                        <li>Aplicações específicas para cada tipo de filtro:
+                            <ul>
+                                <li>Filtro de Máximo: similar à dilatação morfológica</li>
+                                <li>Filtro de Mínimo: similar à erosão morfológica</li>
+                                <li>Filtro de Mediana: remoção de ruído "sal e pimenta"</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="version">
+                    <h3>Versão 0.1.22</h3>
+                    <h4>Adicionado</h4>
+                    <ul>
+                        <li>Implementação do filtro de suavização da média no menu Ferramentas</li>
+                        <li>Diálogo para configuração do tamanho do kernel (3x3, 5x5, 7x7, 9x9, 11x11)</li>
+                        <li>Nova implementação de filtragem espacial no módulo <code>spatial_filtering.py</code></li>
+                        <li>Preservação do canal alpha em imagens com transparência</li>
+                    </ul>
+                </div>
+                
+                <div class="version">
+                    <h3>Versão 0.1.21</h3>
                     <h4>Alterado</h4>
                     <ul>
-                        <li>Aprimorado o "Fatiamento por Planos de Bits" para detecção automática de profundidade</li>
-                        <li>Melhorada a interface com informações detalhadas sobre cada plano de bits</li>
+                        <li>Reorganização do menu Ferramentas para melhor usabilidade</li>
+                        <li>Todas as ferramentas de processamento agora diretamente no menu Ferramentas</li>
                     </ul>
                 </div>
                 
                 <div class="version">
-                    <h3>Versão 0.1.17</h3>
-                    <span class="version-date">16 de maio de 2024</span>
+                    <h3>Versão 0.1.20</h3>
                     <h4>Adicionado</h4>
                     <ul>
-                        <li>Nova função "Fatiamento por Planos de Bits" no menu Ferramentas</li>
-                        <li>Implementação da decomposição de imagens em seus 8 planos de bits (0-7)</li>
-                        <li>Diálogo interativo para visualização de planos de bits individuais</li>
+                        <li>Implementação do fatiamento por intensidades para pseudocores</li>
+                        <li>Interface com visualização lado a lado (original e com pseudocores)</li>
+                        <li>Mapas de cores predefinidos (Arco-íris, Temperatura, etc.)</li>
+                        <li>Criação personalizada de intervalos de intensidade com seleção de cores</li>
                     </ul>
                 </div>
             </div>
@@ -480,12 +646,12 @@ pip install -e .
 
     <footer>
         <div class="container">
-            <p>Henpixy &copy; 2024 - Licenciado sob <a href="https://github.com/seu-usuario/henpixy/blob/main/LICENSE">MIT License</a></p>
+            <p>Henpixy &copy; 2025 - Licenciado sob <a href="https://github.com/lailson/Henpixy/blob/main/LICENSE">MIT License</a></p>
             <p>Desenvolvido para fins educacionais como parte de trabalho acadêmico</p>
             <div class="icon-grid">
-                <a href="https://github.com/seu-usuario/henpixy">GitHub</a>
-                <a href="https://github.com/seu-usuario/henpixy/issues">Reportar Bug</a>
-                <a href="https://github.com/seu-usuario/henpixy/blob/main/CHANGELOG.md">Changelog Completo</a>
+                <a href="https://github.com/lailson/Henpixy">GitHub</a>
+                <a href="https://github.com/lailson/Henpixy/issues">Reportar Bug</a>
+                <a href="https://github.com/lailson/Henpixy/blob/main/CHANGELOG.md">Changelog Completo</a>
             </div>
         </div>
     </footer>
