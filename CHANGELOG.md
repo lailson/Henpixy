@@ -5,7 +5,7 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
-## [0.1.24] - 2024-05-19
+## [0.1.24]
 
 ### Adicionado
 - Implementação do Filtro Laplaciano no menu Ferramentas
@@ -22,7 +22,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Preservação do canal alpha em imagens com transparência
 - Integração com o sistema de histórico
 
-## [0.1.23] - 2024-05-19
+## [0.1.23]
 
 ### Adicionado
 - Implementação dos filtros de estatísticas de ordem (Máximo, Mínimo e Mediana) no menu Ferramentas
@@ -35,7 +35,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
   - Filtro de Mediana: remove ruído "sal e pimenta" preservando melhor as bordas
 - Integração com o sistema de histórico para facilitar comparações
 
-## [0.1.22] - 2024-05-19
+## [0.1.22]
 
 ### Adicionado
 - Implementação do filtro de suavização da média no menu Ferramentas
@@ -46,14 +46,14 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Informações sobre os efeitos e aplicações do filtro de suavização
 - Integração com o sistema de histórico para facilitar comparações
 
-## [0.1.21] - 2024-05-18
+## [0.1.21]
 
 ### Alterado
 - Reorganização do menu Ferramentas, removendo o submenu Intensidade
 - Todas as ferramentas de processamento de imagem agora estão diretamente no menu Ferramentas
 - Simplificação da estrutura do menu para melhor usabilidade
 
-## [0.1.20] - 2024-05-18
+## [0.1.20]
 
 ### Adicionado
 - Implementação do fatiamento por intensidades para pseudocores no menu Ferramentas
@@ -65,7 +65,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Informações teóricas sobre fatiamento por intensidades e suas aplicações
 - Integração com o sistema de histórico do aplicativo
 
-## [0.1.19] - 2024-05-17
+## [0.1.19]
 
 ### Adicionado
 - Implementação da equalização de histograma no menu Ferramentas
@@ -78,7 +78,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Interface responsiva com suporte para redimensionamento e barras de rolagem
 - Informações teóricas sobre histogramas e equalização
 
-## [0.1.18] - 2024-05-16
+## [0.1.18]
 
 ### Alterado
 - Aprimorado o "Fatiamento por Planos de Bits" para detectar automaticamente a profundidade de bits da imagem
@@ -87,7 +87,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Reorganizado o layout para melhor visualização das propriedades de cada plano
 - Removida a funcionalidade de reconstrução para simplificar a interface
 
-## [0.1.17] - 2024-05-16
+## [0.1.17]
 
 ### Adicionado
 - Nova função "Fatiamento por Planos de Bits" no menu Ferramentas
@@ -99,7 +99,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Suporte para visualizar o impacto de cada plano de bits na qualidade da imagem
 - Integração com o sistema de histórico para facilitar comparações
 
-## [0.1.16] - 2024-05-15
+## [0.1.16]
 
 ### Adicionado
 - Nova função "Alargamento de Contraste" no menu Ferramentas
@@ -111,7 +111,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Descrição explicativa da função e seus efeitos no diálogo
 - Preservação do canal alpha em imagens com transparência
 
-## [0.1.15] - 2024-05-15
+## [0.1.15]
 
 ### Adicionado
 - Nova função de transformação "Transformação Gama" no menu Ferramentas
@@ -121,7 +121,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Informações detalhadas sobre o efeito de diferentes valores de gamma na imagem
 - Preservação do canal alpha em imagens com transparência
 
-## [0.1.14] - 2024-05-15
+## [0.1.14]
 
 ### Adicionado
 - Nova função de transformação "Negativo" no menu Ferramentas
@@ -129,14 +129,14 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Suporte para processamento de imagens em escala de cinza e coloridas (RGB/RGBA)
 - Preservação do canal alpha em imagens com transparência
 
-## [0.1.13] - 2024-05-15
+## [0.1.13]
 
 ### Alterado
 - Modificado o comportamento do menu "Abrir modelo" para exibir um submenu em cascata
 - Adicionado botão "Atualizar lista" no submenu de imagens de amostra
 - Melhorada a experiência do usuário na seleção de imagens de amostra
 
-## [0.1.12] - 2024-05-15
+## [0.1.12]
 
 ### Adicionado
 - Diretório "samples" para armazenar imagens de amostra para testes
@@ -145,7 +145,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - README explicativo para o diretório de amostras
 - Configurações para ignorar imagens de amostra no controle de versão
 
-## [0.1.11] - 2024-05-15
+## [0.1.11]
 
 ### Adicionado
 - Novo menu "Exibir" com opções de zoom
@@ -155,7 +155,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Indicação do nível de zoom no título da janela
 - Limites de zoom configuráveis (mínimo 10%, máximo 500%)
 
-## [0.1.10] - 2024-05-15
+## [0.1.10]
 
 ### Adicionado
 - Submenu "Informações" no menu Arquivo
@@ -166,7 +166,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Informações sobre DPI e resolução da imagem
 - Interface organizada com rolagem para facilitar a visualização
 
-## [0.1.9] - 2024-05-15
+## [0.1.9]
 
 ### Adicionado
 - Campos para entrada manual de coordenadas (x,y) na janela de intensidade de pixels
@@ -174,7 +174,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Validação de coordenadas para garantir que estejam dentro dos limites da imagem
 - Sincronização entre seleção de pixel por clique e coordenadas digitadas
 
-## [0.1.8] - 2024-05-15
+## [0.1.8]
 
 ### Adicionado
 - Nova funcionalidade "Intensidade" no menu Janela
@@ -185,7 +185,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Suporte para visualizar valores RGB em imagens coloridas
 - Exibição colorida de pixels para facilitar a interpretação
 
-## [0.1.7] - 2024-05-15
+## [0.1.7]
 
 ### Alterado
 - Transformado o diálogo de histórico em janela auxiliar não-modal
@@ -193,13 +193,13 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - A janela de histórico permanece aberta após restaurar uma imagem
 - Melhorado o fluxo de trabalho para permitir múltiplas restaurações em sequência
 
-## [0.1.6] - 2024-05-15
+## [0.1.6]
 
 ### Alterado
 - Removida a mensagem de confirmação após aplicar o filtro de intensidade zero
 - Corrigido bug na restauração de imagens a partir do histórico
 
-## [0.1.5] - 2024-05-04
+## [0.1.5]
 
 ### Adicionado
 - Submenu "Intensidade" no menu Ferramentas (posteriormente removido na v0.1.21)
@@ -208,7 +208,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Separação entre GUI e lógica de processamento de imagem
 - Função auxiliar para atualizar a exibição da imagem
 
-## [0.1.4] - 2024-05-04
+## [0.1.4]
 
 ### Alterado
 - Atualizado o diálogo "Sobre" com informações do desenvolvedor
@@ -217,7 +217,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Atualizado link para o repositório do projeto
 - Melhorado o layout do diálogo "Sobre" para melhor legibilidade
 
-## [0.1.3] - 2024-05-04
+## [0.1.3]
 
 ### Adicionado
 - Script de build para gerar executáveis (build.py)
@@ -226,7 +226,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Arquivo de licença MIT
 - Documentação para personalização do ícone do executável
 
-## [0.1.2] - 2024-05-04
+## [0.1.2]
 
 ### Adicionado
 - Submenu "Salvar" no menu Arquivo, com atalho Ctrl+S
@@ -237,7 +237,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Feedback visual após o salvamento (mensagem de sucesso ou erro)
 - Título da janela agora mostra o nome do arquivo atual
 
-## [0.1.1] - 2024-05-04
+## [0.1.1]
 
 ### Adicionado
 - Submenu "Sair" no menu Arquivo
@@ -245,7 +245,7 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Diálogo de confirmação ao fechar o programa
 - Separador visual entre as opções "Abrir" e "Sair" no menu Arquivo
 
-## [0.1.0] - 2024-05-04
+## [0.1.0]
 
 ### Adicionado
 - Estrutura inicial do projeto
